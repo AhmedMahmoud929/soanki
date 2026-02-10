@@ -9,79 +9,88 @@ const stepIcons = [
   "solar:equalizer-bold",
   "solar:download-bold",
 ] as const;
-const stepConfig = [
-  { colorClass: "border-soft-blue text-soft-blue-dark", labelColor: "text-soft-blue", align: "left" as const },
-  { colorClass: "border-soft-blue-dark text-soft-blue-dark", labelColor: "text-soft-blue-dark", align: "right" as const },
-  { colorClass: "border-soft-yellow text-yellow-500", labelColor: "text-soft-yellow", align: "left" as const },
-  { colorClass: "border-soft-orange text-orange-500", labelColor: "text-soft-orange", align: "right" as const },
-  { colorClass: "bg-soft-blue-dark text-white border-4 border-white", labelColor: "text-soft-blue-dark", align: "left" as const, isLast: true },
-];
+const stepBadgeColors = [
+  "bg-soft-blue/20 text-soft-blue-dark",
+  "bg-soft-blue-dark/20 text-soft-blue-dark",
+  "bg-soft-yellow/20 text-yellow-600",
+  "bg-soft-orange/20 text-soft-orange",
+  "bg-white/25 text-white",
+] as const;
 
 export async function ProcessSection() {
   const t = await getTranslations("Process");
 
   return (
-    <section className="py-32 relative" id="process">
-      <div className="container mx-auto px-6 max-w-4xl">
-        <div className="text-center mb-24">
-          <span className="bg-soft-blue/10 text-soft-blue-dark px-4 py-2 rounded-full font-bold text-sm tracking-wide uppercase mb-4 inline-block">
+    <section className="py-24 md:py-32 relative overflow-hidden" id="process">
+      {/* Soft background shape */}
+      <div className="absolute inset-0 bg-gradient-to-b from-cream/30 via-transparent to-soft-blue/5 pointer-events-none" />
+      <div className="container mx-auto px-6 relative">
+        <header className="text-center max-w-2xl mx-auto mb-16 md:mb-20">
+          <span className="inline-block bg-soft-blue/10 text-soft-blue-dark px-4 py-2 rounded-full font-bold text-sm tracking-wide uppercase mb-4">
             {t("badge")}
           </span>
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-ink font-[family-name:var(--font-fredoka)]">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-ink font-[family-name:var(--font-fredoka)]">
             {t("title")}
           </h2>
           <p className="text-xl text-ink/60 font-[family-name:var(--font-fredoka)]">
             {t("subtitle")}
           </p>
-        </div>
+        </header>
+
+        {/* Steps: horizontal on desktop, vertical on mobile */}
         <div className="relative">
-          <div className="timeline-line w-1" />
-          {stepKeys.map((key, index) => {
-            const config = stepConfig[index];
-            return (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-3">
+            {stepKeys.map((key, index) => (
               <div
                 key={key}
-                className={`relative z-10 ${index < stepKeys.length - 1 ? "mb-20 md:mb-32" : ""}`}
+                className="relative flex flex-col items-center text-center"
               >
+                {/* Step number + icon card */}
                 <div
-                  className={`flex flex-col md:flex-row ${config.align === "right" ? "md:flex-row-reverse" : ""} items-center gap-8 md:gap-16`}
+                  className={`
+                    w-full max-w-[320px] lg:max-w-none mx-auto rounded-2xl border-2 p-6 md:p-6
+                    transition-all duration-300
+                    ${index === 4
+                      ? "bg-soft-blue-dark text-white border-soft-blue-dark shadow-lg shadow-soft-blue-dark/25"
+                      : "bg-white border-ink/10 shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-soft-hover)] hover:-translate-y-1"
+                    }
+                  `}
                 >
-                  <div
-                    className={`w-20 h-20 md:w-32 md:h-32 rounded-full flex items-center justify-center shadow-lg flex-shrink-0 z-10 ${
-                      config.isLast
-                        ? config.colorClass
-                        : `bg-white border-4 ${config.colorClass}`
-                    }`}
+                  <span
+                    className={`inline-flex items-center justify-center w-10 h-10 rounded-xl font-bold text-lg mb-4 ${stepBadgeColors[index]}`}
                   >
-                    <Icon icon={stepIcons[index]} className="text-4xl md:text-5xl size-12 md:size-14" />
-                  </div>
+                    {key}
+                  </span>
                   <div
-                    className={`text-center md:w-1/2 ${
-                      config.align === "right" ? "md:text-right" : "md:text-left"
-                    } ${
-                      config.isLast
-                        ? "bg-soft-blue/10 p-8 rounded-3xl border-2 border-soft-blue/20"
-                        : "bg-white p-6 rounded-3xl border-2 border-ink/5 shadow-sm"
-                    }`}
+                    className={`
+                      w-14 h-14 mx-auto mb-4 rounded-2xl flex items-center justify-center
+                      ${index === 4 ? "bg-white/20" : "bg-ink/5"}
+                    `}
                   >
-                    <span
-                      className={`${config.labelColor} font-bold text-lg mb-2 block font-[family-name:var(--font-fredoka)]`}
-                    >
-                      {t(`steps.${key}.label`)}
-                    </span>
-                    <h3 className="text-3xl font-bold mb-3 text-ink">
-                      {t(`steps.${key}.title`)}
-                    </h3>
-                    <p
-                      className={`text-lg leading-relaxed font-[family-name:var(--font-fredoka)] ${config.isLast ? "text-ink/70" : "text-ink/60"}`}
-                    >
-                      {t(`steps.${key}.description`)}
-                    </p>
+                    <Icon
+                      icon={stepIcons[index]}
+                      className={index === 4 ? "text-3xl text-white" : "text-3xl text-ink"}
+                    />
                   </div>
+                  <h3 className={`text-lg md:text-xl font-bold mb-2 font-[family-name:var(--font-fredoka)] ${index === 4 ? "text-white" : "text-ink"}`}>
+                    {t(`steps.${key}.title`)}
+                  </h3>
+                  <p
+                    className={`text-sm md:text-base leading-relaxed font-[family-name:var(--font-fredoka)] ${index === 4 ? "text-white/90" : "text-ink/60"}`}
+                  >
+                    {t(`steps.${key}.description`)}
+                  </p>
                 </div>
+
+                {/* Arrow between steps (desktop, except after last) */}
+                {index < stepKeys.length - 1 && (
+                  <div className="hidden lg:flex absolute -right-2 top-24 z-10 text-ink/20" aria-hidden>
+                    <Icon icon="solar:arrow-right-linear" className="size-6" />
+                  </div>
+                )}
               </div>
-            );
-          })}
+            ))}
+          </div>
         </div>
       </div>
     </section>

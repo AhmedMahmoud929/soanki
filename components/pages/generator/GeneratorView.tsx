@@ -1,0 +1,294 @@
+"use client";
+
+import { useState, useCallback, useRef } from "react";
+import { useTranslations } from "next-intl";
+import { Icon } from "@iconify/react";
+import { Stepper, type GeneratorStep } from "./Stepper";
+import { GeneratorCard } from "./GeneratorCard";
+import { Button } from "@/components/ui/button";
+import type { GeneratorCard as CardType } from "./types";
+import { cn } from "@/lib/utils";
+
+function createCard(overrides: Partial<CardType> & { word: string }): CardType {
+  return {
+    id: overrides.id ?? crypto.randomUUID(),
+    word: overrides.word,
+    meaning: overrides.meaning ?? "",
+    example: overrides.example ?? "",
+    partOfSpeech: overrides.partOfSpeech ?? "",
+    imageUrl: overrides.imageUrl,
+    frontAudioUrl: overrides.frontAudioUrl,
+    exampleAudioUrl: overrides.exampleAudioUrl,
+    loading: overrides.loading ?? false,
+  };
+}
+
+function generateCsvPreview(cards: CardType[]): string {
+  const header = "word,meaning,example,partOfSpeech";
+  const rows = cards.map((c) =>
+    [c.word, c.meaning, c.example, c.partOfSpeech].map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(",")
+  );
+  return [header, ...rows].join("\n");
+}
+
+export function GeneratorView() {
+  const t = useTranslations("Generator");
+  const [currentStep, setCurrentStep] = useState<GeneratorStep>(1);
+  const [inputText, setInputText] = useState("");
+  const [cards, setCards] = useState<CardType[]>([]);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [isGeneratingImages, setIsGeneratingImages] = useState(false);
+  const [isGeneratingAudio, setIsGeneratingAudio] = useState(false);
+  const [isPreparingDeck, setIsPreparingDeck] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleGenerate = useCallback(() => {
+    const lines = inputText
+      .split(/\n/)
+      .map((s) => s.trim())
+      .filter(Boolean);
+    if (lines.length === 0) return;
+    setIsGenerating(true);
+    setCards(
+      lines.map((word) =>
+        createCard({
+          word,
+          meaning: "",
+          example: "",
+          partOfSpeech: "",
+          loading: true,
+        })
+      )
+    );
+    // Simulate progress: clear loading after a short delay and fill placeholders
+    setTimeout(() => {
+      setCards((prev) =>
+        prev.map((c) => ({
+          ...c,
+          loading: false,
+          meaning: `Meaning for ${c.word}`,
+          example: `Example sentence for ${c.word}.`,
+          partOfSpeech: "noun",
+        }))
+      );
+      setIsGenerating(false);
+      setCurrentStep(2);
+    }, 1500);
+  }, [inputText]);
+
+  const handleFileUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const text = String(reader.result ?? "");
+      setInputText((prev) => (prev ? `${prev}\n${text}` : text));
+    };
+    reader.readAsText(file);
+    e.target.value = "";
+  }, []);
+
+  const removeCard = useCallback((id: string) => {
+    setCards((prev) => prev.filter((c) => c.id !== id));
+  }, []);
+
+  const addEmptyCard = useCallback(() => {
+    setCards((prev) => [...prev, createCard({ word: "New word" })]);
+  }, []);
+
+  const handleGenerateImagesByAi = useCallback(() => {
+    setIsGeneratingImages(true);
+    setTimeout(() => setIsGeneratingImages(false), 2000);
+  }, []);
+
+  const handleGenerateAudioByAi = useCallback(() => {
+    setIsGeneratingAudio(true);
+    setTimeout(() => setIsGeneratingAudio(false), 2000);
+  }, []);
+
+  const handlePrepareDeckByAi = useCallback(() => {
+    setIsPreparingDeck(true);
+    setTimeout(() => setIsPreparingDeck(false), 1500);
+  }, []);
+
+  const csvPreview = cards.length > 0 ? generateCsvPreview(cards) : "";
+
+  const generateByAiButtonClass =
+    "rounded-xl bg-soft-blue-dark hover:bg-soft-blue-dark/90 text-white font-bold px-6 shadow-[var(--shadow-soft)] hover:shadow-[var(--shadow-soft-hover)] disabled:opacity-60 inline-flex items-center gap-2 font-[family-name:var(--font-fredoka)]";
+
+  return (
+    <div className="min-h-screen pb-20">
+      {/* Header */}
+      <div className="border-b border-ink/10 bg-white/90 px-4 py-6 text-center">
+        <h1 className="text-2xl md:text-3xl font-bold text-ink font-[family-name:var(--font-fredoka)]">
+          {t("title")}
+        </h1>
+        <p className="mt-2 text-ink/60 font-[family-name:var(--font-fredoka)]">{t("subtitle")}</p>
+      </div>
+
+      <Stepper currentStep={currentStep} onStepClick={setCurrentStep} />
+
+      <div className="container mx-auto px-4 py-8 max-w-5xl">
+        {/* Step 1: Input */}
+        {currentStep === 1 && (
+          <section className="space-y-6">
+            <div className="rounded-2xl border-2 border-ink/10 bg-white p-6 shadow-[var(--shadow-card)]">
+              <label htmlFor="word-input" className="block text-sm font-medium text-ink/70 mb-2 font-[family-name:var(--font-fredoka)]">
+                {t("input.placeholder")}
+              </label>
+              <textarea
+                id="word-input"
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+                placeholder={t("input.placeholder")}
+                rows={6}
+                className="w-full rounded-xl border-2 border-ink/10 bg-paper px-4 py-3 text-ink font-[family-name:var(--font-fredoka)] placeholder:text-ink/40 focus:border-soft-blue focus:outline-none focus:ring-2 focus:ring-soft-blue/20 transition-all"
+              />
+              <div className="mt-4 flex flex-wrap items-center gap-3">
+                <Button
+                  onClick={handleGenerate}
+                  disabled={isGenerating}
+                  className={generateByAiButtonClass}
+                >
+                  <Icon icon="solar:magic-stick-3-bold" className="size-5" />
+                  {isGenerating ? t("card.loading") : t("generateByAi.step1")}
+                </Button>
+                <span className="text-ink/50 font-[family-name:var(--font-fredoka)]">{t("input.or")}</span>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".txt,.csv"
+                  className="hidden"
+                  onChange={handleFileUpload}
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="rounded-xl border-2 border-ink/10 hover:border-soft-blue hover:text-soft-blue-dark font-[family-name:var(--font-fredoka)]"
+                >
+                  <Icon icon="solar:upload-bold" className="size-5" />
+                  {t("input.upload")}
+                </Button>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Cards grid (Steps 2, 3, 4) */}
+        {(currentStep === 2 || currentStep === 3 || currentStep === 4) && (
+          <section className="space-y-6">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <p className="text-ink/60 font-[family-name:var(--font-fredoka)]">
+                {cards.length} {t("card.word")}(s)
+              </p>
+              <div className="flex flex-wrap items-center gap-3">
+                {currentStep === 2 && (
+                  <Button
+                    type="button"
+                    onClick={handleGenerateImagesByAi}
+                    disabled={isGeneratingImages}
+                    className={generateByAiButtonClass}
+                  >
+                    <Icon icon="solar:magic-stick-3-bold" className="size-5" />
+                    {isGeneratingImages ? t("card.loading") : t("generateByAi.step2")}
+                  </Button>
+                )}
+                {currentStep === 3 && (
+                  <Button
+                    type="button"
+                    onClick={handleGenerateAudioByAi}
+                    disabled={isGeneratingAudio}
+                    className={generateByAiButtonClass}
+                  >
+                    <Icon icon="solar:magic-stick-3-bold" className="size-5" />
+                    {isGeneratingAudio ? t("card.loading") : t("generateByAi.step3")}
+                  </Button>
+                )}
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={addEmptyCard}
+                  className="rounded-xl border-2 border-soft-blue/30 text-soft-blue-dark hover:bg-soft-blue/10 font-[family-name:var(--font-fredoka)]"
+                >
+                  <Icon icon="solar:add-circle-bold" className="size-5" />
+                  {t("input.addCard")}
+                </Button>
+              </div>
+            </div>
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {cards.map((card) => (
+                <GeneratorCard
+                  key={card.id}
+                  card={card}
+                  step={currentStep}
+                  onRemove={cards.length > 1 ? removeCard : undefined}
+                />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Export (Step 4) */}
+        {currentStep === 4 && (
+          <section className="mt-10 rounded-2xl border-2 border-ink/10 bg-white p-6 shadow-[var(--shadow-card)]">
+            <h2 className="text-lg font-bold text-ink font-[family-name:var(--font-fredoka)] mb-4">
+              {t("export.button")}
+            </h2>
+            <div className="flex flex-wrap items-center gap-3 mb-4">
+              <Button
+                onClick={handlePrepareDeckByAi}
+                disabled={isPreparingDeck}
+                className={generateByAiButtonClass}
+              >
+                <Icon icon="solar:magic-stick-3-bold" className="size-5" />
+                {isPreparingDeck ? t("card.loading") : t("generateByAi.step4")}
+              </Button>
+              <Button
+                disabled
+                className="rounded-xl bg-soft-blue-dark text-white font-bold px-6 py-3 opacity-70 cursor-not-allowed"
+              >
+                {t("export.button")}
+              </Button>
+            </div>
+            <p className="mt-2 text-sm text-ink/50 font-[family-name:var(--font-fredoka)]">
+              {t("export.disabledHint")}
+            </p>
+            <div className="mt-6">
+              <h3 className="text-sm font-bold text-ink/70 font-[family-name:var(--font-fredoka)] mb-2">
+                {t("export.csvPreview")}
+              </h3>
+              <pre
+                className={cn(
+                  "rounded-xl border-2 border-ink/10 bg-ink/5 p-4 text-xs text-ink/80 overflow-auto max-h-48 font-mono whitespace-pre-wrap",
+                  "rtl:text-right"
+                )}
+              >
+                {csvPreview || "— No data yet —"}
+              </pre>
+            </div>
+          </section>
+        )}
+
+        {/* Show cards also on step 1 after generate (optional: show empty state when no cards) */}
+        {currentStep === 1 && cards.length > 0 && (
+          <section className="mt-10">
+            <p className="text-ink/60 font-[family-name:var(--font-fredoka)] mb-4">
+              {t("export.previewHint")}
+            </p>
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {cards.map((card) => (
+                <GeneratorCard
+                  key={card.id}
+                  card={card}
+                  step={1}
+                  onRemove={cards.length > 1 ? removeCard : undefined}
+                />
+              ))}
+            </div>
+          </section>
+        )}
+      </div>
+    </div>
+  );
+}

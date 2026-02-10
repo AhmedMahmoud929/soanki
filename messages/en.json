@@ -119,5 +119,48 @@
     "terms": "Terms of Service",
     "contact": "Contact Support",
     "copyright": "© 2024 Soanki AI. Crafted with ♥ for language learners everywhere."
+  },
+  "Generator": {
+    "title": "Deck Generator",
+    "subtitle": "Paste words or upload a file to generate flashcards.",
+    "stepper": {
+      "step1": "Generate Text",
+      "step2": "Add Images",
+      "step3": "Add Audio",
+      "step4": "Export"
+    },
+    "input": {
+      "placeholder": "Enter one word per line, or paste a list…",
+      "upload": "Upload file",
+      "or": "or",
+      "generate": "Generate",
+      "addCard": "Add card",
+      "generateByAi": "Generate by AI"
+    },
+    "generateByAi": {
+      "step1": "Generate text by AI",
+      "step2": "Generate images by AI",
+      "step3": "Generate audio by AI",
+      "step4": "Prepare deck by AI"
+    },
+    "card": {
+      "word": "Word",
+      "meaning": "Meaning",
+      "example": "Example",
+      "partOfSpeech": "Part of speech",
+      "imagePlaceholder": "Image",
+      "frontAudio": "Front audio",
+      "exampleAudio": "Example audio",
+      "play": "Play",
+      "regenerate": "Regenerate",
+      "uploadImage": "Upload image",
+      "loading": "Generating…"
+    },
+    "export": {
+      "button": "Export Deck",
+      "csvPreview": "CSV Preview",
+      "disabledHint": "Export will be available when your deck is ready.",
+      "previewHint": "Use the stepper above to go to Add Images, Add Audio, or Export."
+    }
   }
 }

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Icon } from "@iconify/react";
 import { getTranslations } from "next-intl/server";
+import Link from "next/link";
 
 export async function Hero() {
   const t = await getTranslations("Hero");
@@ -27,12 +28,12 @@ export async function Hero() {
           {t("subtitle")}
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-          <a
-            href="#"
+          <Link
+            href="/generator"
             className="w-full sm:w-auto px-8 py-4 bg-soft-orange text-white text-xl font-bold rounded-2xl shadow-[var(--shadow-soft)] hover:shadow-[var(--shadow-soft-hover)] hover:-translate-y-1 transition-all border-b-4 border-orange-600 active:border-b-0 active:translate-y-1"
           >
             {t("getStarted")}
-          </a>
+          </Link>
           <a
             href="#"
             className="w-full sm:w-auto px-8 py-4 bg-white text-ink text-xl font-bold rounded-2xl border-2 border-ink/10 shadow-sm hover:border-soft-blue-dark hover:text-soft-blue-dark transition-all flex items-center justify-center gap-2"

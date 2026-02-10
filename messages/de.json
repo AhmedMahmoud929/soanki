@@ -119,5 +119,48 @@
     "terms": "Nutzungsbedingungen",
     "contact": "Support",
     "copyright": "© 2024 Soanki AI. Mit ♥ für Sprachlernende."
+  },
+  "Generator": {
+    "title": "Deck-Generator",
+    "subtitle": "Wörter einfügen oder Datei hochladen, um Karteikarten zu erstellen.",
+    "stepper": {
+      "step1": "Text generieren",
+      "step2": "Bilder hinzufügen",
+      "step3": "Audio hinzufügen",
+      "step4": "Export"
+    },
+    "input": {
+      "placeholder": "Ein Wort pro Zeile, oder Liste einfügen…",
+      "upload": "Datei hochladen",
+      "or": "oder",
+      "generate": "Generieren",
+      "addCard": "Karte hinzufügen",
+      "generateByAi": "Mit KI generieren"
+    },
+    "generateByAi": {
+      "step1": "Text mit KI generieren",
+      "step2": "Bilder mit KI generieren",
+      "step3": "Audio mit KI generieren",
+      "step4": "Deck mit KI vorbereiten"
+    },
+    "card": {
+      "word": "Wort",
+      "meaning": "Bedeutung",
+      "example": "Beispiel",
+      "partOfSpeech": "Wortart",
+      "imagePlaceholder": "Bild",
+      "frontAudio": "Vorderseite Audio",
+      "exampleAudio": "Beispiel-Audio",
+      "play": "Abspielen",
+      "regenerate": "Neu generieren",
+      "uploadImage": "Bild hochladen",
+      "loading": "Wird erstellt…"
+    },
+    "export": {
+      "button": "Deck exportieren",
+      "csvPreview": "CSV-Vorschau",
+      "disabledHint": "Export ist verfügbar, sobald dein Deck fertig ist.",
+      "previewHint": "Nutze die Schritte oben für Bilder, Audio oder Export."
+    }
   }
 }

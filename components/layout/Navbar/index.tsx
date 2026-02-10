@@ -81,7 +81,7 @@ export function Navbar() {
             </DropdownMenuContent>
           </DropdownMenu>
           <Link
-            href="#"
+            href="/generator"
             className={cn(
               "hidden md:block px-6 py-2.5 bg-soft-blue-dark text-white font-bold rounded-2xl",
               "shadow-[var(--shadow-soft)] hover:shadow-[var(--shadow-soft-hover)] hover:-translate-y-0.5",
