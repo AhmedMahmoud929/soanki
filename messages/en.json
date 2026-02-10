@@ -177,6 +177,7 @@
       "uploadImage": "Upload image",
       "loading": "Generating…"
     },
+    "nextToExport": "Next",
     "export": {
       "button": "Export Deck",
       "csvPreview": "CSV Preview",

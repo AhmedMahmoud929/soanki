@@ -177,6 +177,7 @@
       "uploadImage": "Bild hochladen",
       "loading": "Wird erstellt…"
     },
+    "nextToExport": "Weiter",
     "export": {
       "button": "Deck exportieren",
       "csvPreview": "CSV-Vorschau",

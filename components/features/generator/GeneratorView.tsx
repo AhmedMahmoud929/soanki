@@ -39,9 +39,9 @@ function createCard(overrides: Partial<CardType> & { word: string }): CardType {
 }
 
 function generateCsvPreview(cards: CardType[]): string {
-  const header = "word,meaning,example,partOfSpeech";
+  const header = "Front,Back,Example,Image,Type";
   const rows = cards.map((c) =>
-    [c.word, c.meaning, c.example, c.partOfSpeech].map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(",")
+    [c.word, c.meaning, c.example, c.imageUrl ?? "", c.partOfSpeech].map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(",")
   );
   return [header, ...rows].join("\n");
 }
@@ -298,6 +298,18 @@ export function GeneratorView() {
     setTimeout(() => setIsPreparingDeck(false), 1500);
   }, []);
 
+  const handleExportDeck = useCallback(() => {
+    if (cards.length === 0) return;
+    const csv = generateCsvPreview(cards);
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "soanki-deck.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  }, [cards]);
+
   const csvPreview = cards.length > 0 ? generateCsvPreview(cards) : "";
 
   return (
@@ -344,6 +356,7 @@ export function GeneratorView() {
             isGeneratingImages={isGeneratingImages}
             getImageSearchQuery={getImageSearchQuery}
             onAddCard={() => setAddCardOpen(true)}
+            onGoToExport={() => setCurrentStep(4)}
           />
         )}
 
@@ -378,6 +391,8 @@ export function GeneratorView() {
               csvPreview={csvPreview}
               onPrepareDeck={handlePrepareDeckByAi}
               isPreparingDeck={isPreparingDeck}
+              onExportDeck={handleExportDeck}
+              hasCards={cards.length > 0}
             />
           </>
         )}

@@ -17,6 +17,8 @@ type GeneratorStep2CardsProps = {
   isGeneratingImages: boolean;
   getImageSearchQuery: (card: CardType) => string;
   onAddCard: () => void;
+  /** When on step 2, call this to go to Export step. */
+  onGoToExport?: () => void;
 };
 
 const generateByAiButtonClass =
@@ -32,8 +34,10 @@ export function GeneratorStep2Cards({
   isGeneratingImages,
   getImageSearchQuery,
   onAddCard,
+  onGoToExport,
 }: GeneratorStep2CardsProps) {
   const t = useTranslations("Generator");
+  const isStep2 = currentStep === 2;
 
   return (
     <section className="space-y-6">
@@ -77,6 +81,18 @@ export function GeneratorStep2Cards({
           />
         ))}
       </div>
+      {isStep2 && onGoToExport && (
+        <div className="mt-10 flex justify-center">
+          <Button
+            type="button"
+            size={"lg"}
+            onClick={onGoToExport}
+            className="rounded-xl text-2xl bg-soft-blue-dark hover:bg-soft-blue-dark/90 text-white font-semibold px-8 py-4 shadow-[var(--shadow-soft)] hover:shadow-[var(--shadow-soft-hover)] inline-flex items-center gap-2 font-[family-name:var(--font-fredoka)]"
+          >
+            {t("nextToExport")}
+          </Button>
+        </div>
+      )}
     </section>
   );
 }

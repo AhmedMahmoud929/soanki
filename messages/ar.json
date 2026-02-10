@@ -177,6 +177,7 @@
       "uploadImage": "رفع صورة",
       "loading": "جاري الإنشاء…"
     },
+    "nextToExport": "التالي",
     "export": {
       "button": "تصدير المجموعة",
       "csvPreview": "معاينة CSV",
