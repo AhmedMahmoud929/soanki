@@ -10,9 +10,19 @@ type GeneratorCardProps = {
   card: CardType;
   step: GeneratorStep;
   onRemove?: (id: string) => void;
+  /** Called when user clicks Regenerate to fetch an image from the card's imageDescription (or word). */
+  onRegenerateImage?: (card: CardType) => void;
+  /** True while the image for this card is being fetched. */
+  isRegeneratingImage?: boolean;
 };
 
-export function GeneratorCard({ card, step, onRemove }: GeneratorCardProps) {
+export function GeneratorCard({
+  card,
+  step,
+  onRemove,
+  onRegenerateImage,
+  isRegeneratingImage = false,
+}: GeneratorCardProps) {
   const t = useTranslations("Generator.card");
 
   const cardBase =
@@ -55,30 +65,48 @@ export function GeneratorCard({ card, step, onRemove }: GeneratorCardProps) {
 
       {/* Image placeholder (Step 2, 3, 4) */}
       {(step === 2 || step === 3 || step === 4) && (
-        <div className="mt-4 rounded-xl bg-ink/5 border-2 border-dashed border-ink/20 aspect-video flex flex-col items-center justify-center gap-2">
-          {card.imageUrl ? (
+        <div className="mt-4 rounded-xl bg-ink/5 border-2 border-dashed border-ink/20 aspect-video flex flex-col items-center justify-center gap-2 overflow-hidden relative">
+          {card.imageUrl && !isRegeneratingImage ? (
             <img src={card.imageUrl} alt="" className="w-full h-full object-cover rounded-xl" />
           ) : (
             <>
-              <Icon icon="solar:gallery-bold" className="size-10 text-ink/30" />
-              <span className="text-xs text-ink/50 font-[family-name:var(--font-fredoka)]">{t("imagePlaceholder")}</span>
-              <div className="flex gap-2">
-                <button
-                  type="button"
-                  disabled
-                  className="rounded-lg px-3 py-1.5 text-xs font-medium bg-ink/10 text-ink/40 cursor-not-allowed"
-                >
-                  {t("regenerate")}
-                </button>
-                <button
-                  type="button"
-                  className="rounded-lg px-3 py-1.5 text-xs font-medium bg-soft-blue/20 text-soft-blue-dark hover:bg-soft-blue/30 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-soft-blue"
-                >
-                  {t("uploadImage")}
-                </button>
-              </div>
+              {isRegeneratingImage ? (
+                <span className="text-xs text-ink/60 font-[family-name:var(--font-fredoka)]">{t("loading")}</span>
+              ) : (
+                <>
+                  <Icon icon="solar:gallery-bold" className="size-10 text-ink/30" />
+                  <span className="text-xs text-ink/50 font-[family-name:var(--font-fredoka)]">{t("imagePlaceholder")}</span>
+                </>
+              )}
             </>
           )}
+          {!card.imageUrl && <div className="flex gap-2 mt-1">
+            <button
+              type="button"
+              disabled={
+                !onRegenerateImage ||
+                isRegeneratingImage ||
+                (!(card.imageDescription?.trim()) && !card.word?.trim())
+              }
+              onClick={() => onRegenerateImage?.(card)}
+              className={cn(
+                "rounded-lg px-3 py-1.5 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-soft-blue",
+                onRegenerateImage &&
+                  !isRegeneratingImage &&
+                  (!!card.imageDescription?.trim() || !!card.word?.trim())
+                  ? "bg-soft-blue/20 text-soft-blue-dark hover:bg-soft-blue/30 cursor-pointer"
+                  : "bg-ink/10 text-ink/40 cursor-not-allowed"
+              )}
+            >
+              {isRegeneratingImage ? t("loading") : t("regenerate")}
+            </button>
+            <button
+              type="button"
+              className="rounded-lg px-3 py-1.5 text-xs font-medium bg-soft-blue/20 text-soft-blue-dark hover:bg-soft-blue/30 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-soft-blue"
+            >
+              {t("uploadImage")}
+            </button>
+          </div>}
         </div>
       )}
 

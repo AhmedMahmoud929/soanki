@@ -52,6 +52,7 @@ export function GeneratorView() {
   const [cards, setCards] = useState<CardType[]>([]);
   const [pendingCardCount, setPendingCardCount] = useState(0);
   const [addCardOpen, setAddCardOpen] = useState(false);
+  const [regeneratingImageCardId, setRegeneratingImageCardId] = useState<string | null>(null);
   const [isGeneratingImages, setIsGeneratingImages] = useState(false);
   const [isGeneratingAudio, setIsGeneratingAudio] = useState(false);
   const [isPreparingDeck, setIsPreparingDeck] = useState(false);
@@ -130,6 +131,33 @@ export function GeneratorView() {
 
   const handleCardCreated = useCallback((card: CardType) => {
     setCards((prev) => [...prev, card]);
+  }, []);
+
+  const handleRegenerateImage = useCallback(async (card: CardType) => {
+    const raw =
+      (card.imageDescription?.trim() || "").replace(/^#IMAGE#\s*-?\s*/i, "") ||
+      card.word?.trim() ||
+      "";
+    if (!raw) return;
+    setRegeneratingImageCardId(card.id);
+    try {
+      const res = await fetch(
+        `/api/search-image?q=${encodeURIComponent(raw)}`
+      );
+      const data = (await res.json()) as { imageUrl?: string; error?: string };
+      if (!res.ok) throw new Error(data.error ?? "Image search failed");
+      if (data.imageUrl) {
+        setCards((prev) =>
+          prev.map((c) =>
+            c.id === card.id ? { ...c, imageUrl: data.imageUrl! } : c
+          )
+        );
+      }
+    } catch {
+      // Leave card unchanged; could show toast
+    } finally {
+      setRegeneratingImageCardId(null);
+    }
   }, []);
 
   const handleGenerateImagesByAi = useCallback(() => {
@@ -259,6 +287,8 @@ export function GeneratorView() {
                   card={card}
                   step={currentStep}
                   onRemove={cards.length > 1 ? removeCard : undefined}
+                  onRegenerateImage={handleRegenerateImage}
+                  isRegeneratingImage={regeneratingImageCardId === card.id}
                 />
               ))}
             </div>
@@ -333,6 +363,8 @@ export function GeneratorView() {
                   card={card}
                   step={1}
                   onRemove={cards.length > 1 ? removeCard : undefined}
+                  onRegenerateImage={handleRegenerateImage}
+                  isRegeneratingImage={regeneratingImageCardId === card.id}
                 />
               ))}
             </div>
