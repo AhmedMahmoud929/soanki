@@ -60,8 +60,8 @@ export async function ComparisonSection() {
             <div className="mt-6 space-y-8">
               {[
                 { key: "instant", icon: "solar:magic-stick-3-bold", iconBg: "bg-soft-blue/20 text-soft-blue-dark" },
-                { key: "illustrations", icon: "solar:brush-bold", iconBg: "bg-soft-yellow/20 text-yellow-600" },
-                { key: "speech", icon: "solar:headphones-bold", iconBg: "bg-soft-orange/20 text-orange-600" },
+                { key: "illustrations", icon: "mage:image-fill", iconBg: "bg-soft-yellow/20 text-yellow-600" },
+                { key: "speech", icon: "lets-icons:sound-max-fill", iconBg: "bg-soft-orange/20 text-orange-600" },
               ].map(({ key, icon, iconBg }) => (
                 <div key={key} className="flex items-start gap-4">
                   <div className={`p-2 rounded-xl ${iconBg}`}>

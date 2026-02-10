@@ -116,7 +116,11 @@ export function GeneratorCard({
           <div className="flex flex-1 items-center gap-2 rounded-xl bg-ink/5 border border-ink/10 px-3 py-2">
             <button
               type="button"
-              className="p-2 rounded-lg bg-white border border-ink/10 hover:bg-cream transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-soft-blue"
+              disabled={!card.frontAudioUrl}
+              onClick={() => {
+                if (card.frontAudioUrl) new Audio(card.frontAudioUrl).play();
+              }}
+              className="p-2 rounded-lg bg-white border border-ink/10 hover:bg-cream transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-soft-blue disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white"
               aria-label={t("play")}
             >
               <Icon icon="solar:play-circle-bold" className="size-5 text-soft-blue-dark" />
@@ -126,7 +130,11 @@ export function GeneratorCard({
           <div className="flex flex-1 items-center gap-2 rounded-xl bg-ink/5 border border-ink/10 px-3 py-2">
             <button
               type="button"
-              className="p-2 rounded-lg bg-white border border-ink/10 hover:bg-cream transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-soft-blue"
+              disabled={!card.exampleAudioUrl}
+              onClick={() => {
+                if (card.exampleAudioUrl) new Audio(card.exampleAudioUrl).play();
+              }}
+              className="p-2 rounded-lg bg-white border border-ink/10 hover:bg-cream transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-soft-blue disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white"
               aria-label={t("play")}
             >
               <Icon icon="solar:play-circle-bold" className="size-5 text-soft-orange" />

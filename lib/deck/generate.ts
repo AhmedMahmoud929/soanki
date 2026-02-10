@@ -1,9 +1,16 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { DECK_RESPONSE_SCHEMA } from "./schema";
-import { DECK_GENERATION_SYSTEM_PROMPT } from "./prompt";
+import { getDeckGenerationSystemPrompt } from "./prompt";
 import type { GenerateDeckCard } from "./types";
 
 const DEFAULT_MODEL = process.env.GEMINI_API_MODEL ?? "gemini-1.5-flash";
+
+export type GenerateDeckOptions = {
+  apiKey?: string;
+  model?: string;
+  language?: "de" | "en" | "ar";
+  level?: "A1" | "A2" | "B1" | "B2" | "C1";
+};
 
 /**
  * Call Gemini to generate deck cards for the given word list.
@@ -12,7 +19,7 @@ const DEFAULT_MODEL = process.env.GEMINI_API_MODEL ?? "gemini-1.5-flash";
  */
 export async function generateDeckWithGemini(
   words: string[],
-  options?: { apiKey?: string; model?: string }
+  options?: GenerateDeckOptions
 ): Promise<GenerateDeckCard[]> {
   const apiKey = options?.apiKey ?? process.env.GEMINI_API_KEY;
   if (!apiKey) {
@@ -20,9 +27,12 @@ export async function generateDeckWithGemini(
   }
 
   const modelId = options?.model ?? process.env.GEMINI_API_MODEL ?? DEFAULT_MODEL;
+  const language = options?.language ?? "de";
+  const level = options?.level ?? "A2";
+  const systemPrompt = getDeckGenerationSystemPrompt(language, level);
   const inputList = words.join(", ");
   const userPrompt = `Input: ${inputList}`;
-  const fullPrompt = [DECK_GENERATION_SYSTEM_PROMPT, userPrompt].join("\n\n");
+  const fullPrompt = [systemPrompt, userPrompt].join("\n\n");
 
   const genAI = new GoogleGenerativeAI(apiKey);
   const model = genAI.getGenerativeModel({ model: modelId });

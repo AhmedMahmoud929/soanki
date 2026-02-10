@@ -18,7 +18,7 @@ export default async function HomePage({ params }: Props) {
       <Hero />
       <ComparisonSection />
       <ProcessSection />
-      <FeaturesSection />
+      {/* <FeaturesSection /> */}
       <CTASection />
     </main>
   );

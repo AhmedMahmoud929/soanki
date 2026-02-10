@@ -55,7 +55,7 @@
   --radius-2xl: 2rem;
   --radius-3xl: 3rem;
   --radius-blob: 40% 60% 70% 30% / 40% 50% 60% 50%;
-  --shadow-soft: 4px 4px 0px 0px rgba(43, 45, 66, 0.1);
+  --shadow-soft: 3px 3px 0px 0px rgba(43, 45, 66, 0.1);
   --shadow-soft-hover: 6px 6px 0px 0px rgba(43, 45, 66, 0.15);
   --shadow-card: 0 10px 40px -10px rgba(0, 0, 0, 0.05);
 }

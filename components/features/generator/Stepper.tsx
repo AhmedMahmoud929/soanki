@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import { Icon } from "@iconify/react";
 import { cn } from "@/lib/utils";
 
-export type GeneratorStep = 1 | 2 | 3 | 4;
+export type GeneratorStep = 1 | 2 | 4;
 
 type StepperProps = {
   currentStep: GeneratorStep;
@@ -12,7 +12,8 @@ type StepperProps = {
   disabled?: boolean;
 };
 
-const steps: GeneratorStep[] = [1, 2, 3, 4];
+// Step 3 (Add Audio) omitted for now – voice/TTS in a future version
+const steps: GeneratorStep[] = [1, 2, 4];
 
 export function Stepper({ currentStep, onStepClick, disabled = false }: StepperProps) {
   const t = useTranslations("Generator.stepper");
@@ -20,7 +21,7 @@ export function Stepper({ currentStep, onStepClick, disabled = false }: StepperP
   const labels: Record<GeneratorStep, string> = {
     1: t("step1"),
     2: t("step2"),
-    3: t("step3"),
+    // 3: t("step3"),
     4: t("step4"),
   };
 
@@ -55,7 +56,7 @@ export function Stepper({ currentStep, onStepClick, disabled = false }: StepperP
                   isPast && "bg-soft-blue-dark/20"
                 )}
               >
-                {step}
+                {index + 1}
               </span>
               <span className="hidden sm:inline">{labels[step]}</span>
             </button>

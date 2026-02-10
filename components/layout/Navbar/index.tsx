@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import { ChevronDown, Globe } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Logo } from "@/components/layout/Logo";
 
 const localeCodes = ["en", "de", "ar"] as const;
 
@@ -20,25 +21,18 @@ export function Navbar() {
   const locale = useLocale();
 
   const navLinks = [
-    { href: "#features", label: t("features") },
-    { href: "#process", label: t("howItWorks") },
-    { href: "#pricing", label: t("pricing") },
+    // { href: "/#features", label: t("features") },
+    // { href: "/#process", label: t("howItWorks") },
+    // { href: "#pricing", label: t("pricing") },
   ];
 
   return (
     <header className="sticky top-0 z-50 w-full bg-paper/90 backdrop-blur-sm border-b-2 border-ink/5">
       <div className="container mx-auto px-6 h-20 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-soft-blue text-white rounded-full flex items-center justify-center shadow-[var(--shadow-soft)] border-2 border-white">
-            <Icon icon="solar:graduation-bold" className="text-2xl" />
-          </div>
-          <span className="text-2xl font-bold tracking-tight text-ink font-[family-name:var(--font-fredoka)]">
-            Soanki
-          </span>
-        </div>
+        <Logo href="/" size="md" />
 
         <nav className="hidden md:flex items-center gap-8 font-medium text-lg text-ink/70">
-          {navLinks.map((link) => (
+          {[].map((link: any) => (
             <Link
               key={link.href}
               href={link.href}

@@ -23,7 +23,12 @@ export async function POST(request: Request) {
       );
     }
 
-    const cards = await generateDeckWithGemini(words);
+    const language =
+      body.language === "en" || body.language === "ar" ? body.language : "de";
+    const level =
+      ["A1", "A2", "B1", "B2", "C1"].includes(body.level) ? body.level : "A2";
+
+    const cards = await generateDeckWithGemini(words, { language, level });
     return NextResponse.json({ cards });
   } catch (err) {
     console.error("generate-deck API error:", err);

@@ -60,30 +60,37 @@
   "Process": {
     "badge": "Die Reise",
     "title": "Von der Wortliste zum Meister",
-    "subtitle": "Eine einfache 5-Schritte-Pipeline für Lernende.",
+    "subtitle": "Eine einfache 6-Schritte-Pipeline für Lernende.",
     "steps": {
       "1": {
         "label": "Schritt 1",
-        "title": "Wörter eingeben",
-        "description": "Füge deine Vokabelliste ein oder lade eine Datei hoch. Wir kümmern uns um die Formatierung."
+        "title": "Template holen",
+        "descriptionBeforeLink": "Lade ",
+        "downloadLink": "Soanki - Template.apkg",
+        "descriptionAfterLink": " herunter und importiere es in Anki (nur beim ersten Mal)."
       },
       "2": {
         "label": "Schritt 2",
-        "title": "Gemini-Analyse",
-        "description": "Unsere KI liest deine Wörter, versteht den Kontext, findet Definitionen und erstellt Beispielsätze."
+        "title": "Wörter eingeben",
+        "description": "Füge deine Vokabelliste ein oder lade eine Datei hoch. Wir kümmern uns um die Formatierung."
       },
       "3": {
         "label": "Schritt 3",
-        "title": "Visuelles Lernen",
-        "description": "Wir erzeugen einzigartige, einprägsame Bilder für jede Karte."
+        "title": "Gemini-Analyse",
+        "description": "Unsere KI liest deine Wörter, versteht den Kontext, findet Definitionen und erstellt Beispielsätze."
       },
       "4": {
         "label": "Schritt 4",
-        "title": "Native Aussprache",
-        "description": "Text-to-Speech erzeugt die perfekte Aussprache in deiner Zielsprache."
+        "title": "Visuelles Lernen",
+        "description": "Wir erzeugen einzigartige, einprägsame Bilder für jede Karte."
       },
       "5": {
         "label": "Schritt 5",
+        "title": "Native Aussprache",
+        "description": "Text-to-Speech erzeugt die perfekte Aussprache in deiner Zielsprache."
+      },
+      "6": {
+        "label": "Schritt 6",
         "title": "Deck herunterladen",
         "description": "Lade deine .apkg-Datei. In Anki importieren und sofort loslegen!"
       }
@@ -128,6 +135,18 @@
       "step2": "Bilder hinzufügen",
       "step3": "Audio hinzufügen",
       "step4": "Export"
+    },
+    "options": {
+      "language": "Sprache",
+      "level": "Niveau",
+      "languageDe": "Deutsch",
+      "languageEn": "Englisch",
+      "languageAr": "Arabisch",
+      "levelA1": "A1",
+      "levelA2": "A2",
+      "levelB1": "B1",
+      "levelB2": "B2",
+      "levelC1": "C1"
     },
     "input": {
       "placeholder": "Ein Wort pro Zeile, oder Liste einfügen…",

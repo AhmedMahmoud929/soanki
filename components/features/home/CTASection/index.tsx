@@ -4,9 +4,9 @@ export async function CTASection() {
   const t = await getTranslations("CTA");
 
   return (
-    <section className="py-24 relative overflow-hidden bg-white">
+    <section className="py-24 relative overflow-hidden bg-crem">
       <div className="container mx-auto px-6 relative z-10">
-        <div className="bg-cream backdrop-blur-md border-2 border-soft-blue-dark/70 rounded-[3rem] p-12 md:p-20 text-center">
+        <div className="bg-white backdrop-blur-md border-2 border-soft-blue-dark/70 rounded-[3rem] p-12 md:p-20 text-center">
           <h2 className="text-4xl md:text-6xl font-bold mb-8 text-ink font-[family-name:var(--font-fredoka)]">
             {t("title")}{" "}
             <span className="text-soft-blue-dark">{t("titleHighlight")}</span>{" "}

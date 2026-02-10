@@ -60,30 +60,37 @@
   "Process": {
     "badge": "The Journey",
     "title": "From Word List to Mastered",
-    "subtitle": "A simple 5-step automated pipeline designed for learners.",
+    "subtitle": "A simple 6-step pipeline designed for learners.",
     "steps": {
       "1": {
         "label": "Step 1",
-        "title": "Input Your Words",
-        "description": "Simply paste your vocabulary list or upload a file. We handle the messy formatting for you."
+        "title": "Get the Template",
+        "descriptionBeforeLink": "Download the ",
+        "downloadLink": "Soanki - Template.apkg",
+        "descriptionAfterLink": " and import it into Anki (only first time)."
       },
       "2": {
         "label": "Step 2",
-        "title": "Gemini Analysis",
-        "description": "Our AI reads your words, understands the context, finds definitions, and creates example sentences."
+        "title": "Input Your Words",
+        "description": "Simply paste your vocabulary list or upload a file. We handle the messy formatting for you."
       },
       "3": {
         "label": "Step 3",
-        "title": "Visual Learning",
-        "description": "We generate unique, memorable images for each card to help stick the meaning in your brain."
+        "title": "Gemini Analysis",
+        "description": "Our AI reads your words, understands the context, finds definitions, and creates sentences."
       },
       "4": {
         "label": "Step 4",
-        "title": "Native Audio",
-        "description": "High-fidelity Text-to-Speech generates perfect pronunciation in your target language."
+        "title": "Visual Learning",
+        "description": "We generate unique, memorable images for each card to help stick the meaning in your brain."
       },
       "5": {
         "label": "Step 5",
+        "title": "Native Audio",
+        "description": "High-fidelity Text-to-Speech generates perfect pronunciation in your target language."
+      },
+      "6": {
+        "label": "Step 6",
         "title": "Download Deck",
         "description": "Get your ready-to-use .apkg file. Import to Anki and start learning immediately!"
       }
@@ -128,6 +135,18 @@
       "step2": "Add Images",
       "step3": "Add Audio",
       "step4": "Export"
+    },
+    "options": {
+      "language": "Language",
+      "level": "Level",
+      "languageDe": "German",
+      "languageEn": "English",
+      "languageAr": "Arabic",
+      "levelA1": "A1",
+      "levelA2": "A2",
+      "levelB1": "B1",
+      "levelB2": "B2",
+      "levelC1": "C1"
     },
     "input": {
       "placeholder": "Enter one word per line, or paste a list…",

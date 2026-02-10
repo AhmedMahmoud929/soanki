@@ -1,6 +1,7 @@
 import { Icon } from "@iconify/react";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import { Logo } from "@/components/layout/Logo";
 
 export async function Footer() {
   const t = await getTranslations("Footer");
@@ -20,14 +21,7 @@ export async function Footer() {
     <footer className="py-12 bg-white border-t border-ink/5">
       <div className="container mx-auto px-6">
         <div className="flex flex-col md:flex-row justify-between items-center gap-8">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-soft-blue text-white rounded-full flex items-center justify-center">
-              <Icon icon="solar:graduation-bold" className="text-xl" />
-            </div>
-            <span className="text-xl font-bold tracking-tight text-ink font-[family-name:var(--font-fredoka)]">
-              Soanki
-            </span>
-          </div>
+          <Logo href="/" size="sm" />
           <div className="flex gap-8 text-lg font-[family-name:var(--font-fredoka)] text-ink/60">
             {footerLinks.map((link) => (
               <Link

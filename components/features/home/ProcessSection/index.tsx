@@ -1,12 +1,13 @@
 import { Icon } from "@iconify/react";
 import { getTranslations } from "next-intl/server";
 
-const stepKeys = ["1", "2", "3", "4", "5"] as const;
+const stepKeys = ["1", "2", "3", "4", "5", "6"] as const;
 const stepIcons = [
-  "solar:document-edit-bold",
-  "solar:brain-bold",
-  "solar:palette-2-bold",
-  "solar:equalizer-bold",
+  "solar:archive-down-bold",
+  "solar:document-text-bold",
+  "solar:lightbulb-bold",
+  "solar:palette-bold",
+  "solar:volume-loud-bold",
   "solar:download-bold",
 ] as const;
 const stepBadgeColors = [
@@ -14,6 +15,7 @@ const stepBadgeColors = [
   "bg-soft-blue-dark/20 text-soft-blue-dark",
   "bg-soft-yellow/20 text-yellow-600",
   "bg-soft-orange/20 text-soft-orange",
+  "bg-ink/10 text-ink",
   "bg-white/25 text-white",
 ] as const;
 
@@ -23,7 +25,7 @@ export async function ProcessSection() {
   return (
     <section className="py-24 md:py-32 relative overflow-hidden" id="process">
       {/* Soft background shape */}
-      <div className="absolute inset-0 bg-gradient-to-b from-cream/30 via-transparent to-soft-blue/5 pointer-events-none" />
+      <div className="absolute inset-0 bg-cream/20 pointer-events-none" />
       <div className="container mx-auto px-6 relative">
         <header className="text-center max-w-2xl mx-auto mb-16 md:mb-20">
           <span className="inline-block bg-soft-blue/10 text-soft-blue-dark px-4 py-2 rounded-full font-bold text-sm tracking-wide uppercase mb-4">
@@ -43,42 +45,56 @@ export async function ProcessSection() {
             {stepKeys.map((key, index) => (
               <div
                 key={key}
-                className="relative flex flex-col items-center text-center"
+                className="relative flex flex-col items-center text-center "
               >
                 {/* Step number + icon card */}
                 <div
                   className={`
                     w-full max-w-[320px] lg:max-w-none mx-auto rounded-2xl border-2 p-6 md:p-6
-                    transition-all duration-300
-                    ${index === 4
+                    transition-all duration-300 relative overflow-hidden 
+                    ${index === 5
                       ? "bg-soft-blue-dark text-white border-soft-blue-dark shadow-lg shadow-soft-blue-dark/25"
                       : "bg-white border-ink/10 shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-soft-hover)] hover:-translate-y-1"
                     }
                   `}
                 >
                   <span
-                    className={`inline-flex items-center justify-center w-10 h-10 rounded-xl font-bold text-lg mb-4 ${stepBadgeColors[index]}`}
+                    className="absolute -top-4 -left-4 text-9xl opacity-20"
                   >
                     {key}
                   </span>
                   <div
                     className={`
                       w-14 h-14 mx-auto mb-4 rounded-2xl flex items-center justify-center
-                      ${index === 4 ? "bg-white/20" : "bg-ink/5"}
+                      ${index === 5 ? "bg-white/20" : "bg-ink/5"}
                     `}
                   >
                     <Icon
                       icon={stepIcons[index]}
-                      className={index === 4 ? "text-3xl text-white" : "text-3xl text-ink"}
+                      className={index === 5 ? "text-3xl text-white" : "text-3xl text-ink"}
                     />
                   </div>
-                  <h3 className={`text-lg md:text-xl font-bold mb-2 font-[family-name:var(--font-fredoka)] ${index === 4 ? "text-white" : "text-ink"}`}>
+                  <h3 className={`text-lg md:text-xl font-bold mb-2 font-[family-name:var(--font-fredoka)] ${index === 5 ? "text-white" : "text-ink"}`}>
                     {t(`steps.${key}.title`)}
                   </h3>
                   <p
-                    className={`text-sm md:text-base leading-relaxed font-[family-name:var(--font-fredoka)] ${index === 4 ? "text-white/90" : "text-ink/60"}`}
+                    className={`text-sm md:text-base leading-relaxed font-[family-name:var(--font-fredoka)] ${index === 5 ? "text-white/90" : "text-ink/60"}`}
                   >
-                    {t(`steps.${key}.description`)}
+                    {key === "1" ? (
+                      <>
+                        {t("steps.1.descriptionBeforeLink")}
+                        <a
+                          href="/files/Soanki - Template.apkg"
+                          download="Soanki - Template.apkg"
+                          className="text-soft-blue-dark underline hover:text-soft-blue-dark/80"
+                        >
+                          {t("steps.1.downloadLink")}
+                        </a>
+                        {t("steps.1.descriptionAfterLink")}
+                      </>
+                    ) : (
+                      t(`steps.${key}.description`)
+                    )}
                   </p>
                 </div>
 
