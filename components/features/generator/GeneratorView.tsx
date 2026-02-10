@@ -133,37 +133,82 @@ export function GeneratorView() {
     setCards((prev) => [...prev, card]);
   }, []);
 
-  const handleRegenerateImage = useCallback(async (card: CardType) => {
+  const getImageSearchQuery = useCallback((card: CardType) => {
     const raw =
       (card.imageDescription?.trim() || "").replace(/^#IMAGE#\s*-?\s*/i, "") ||
       card.word?.trim() ||
       "";
-    if (!raw) return;
-    setRegeneratingImageCardId(card.id);
-    try {
-      const res = await fetch(
-        `/api/search-image?q=${encodeURIComponent(raw)}`
-      );
-      const data = (await res.json()) as { imageUrl?: string; error?: string };
-      if (!res.ok) throw new Error(data.error ?? "Image search failed");
-      if (data.imageUrl) {
-        setCards((prev) =>
-          prev.map((c) =>
-            c.id === card.id ? { ...c, imageUrl: data.imageUrl! } : c
-          )
-        );
-      }
-    } catch {
-      // Leave card unchanged; could show toast
-    } finally {
-      setRegeneratingImageCardId(null);
-    }
+    return raw;
   }, []);
 
-  const handleGenerateImagesByAi = useCallback(() => {
+  const handleRegenerateImage = useCallback(
+    async (card: CardType) => {
+      const raw = getImageSearchQuery(card);
+      if (!raw) return;
+      setRegeneratingImageCardId(card.id);
+      try {
+        const res = await fetch(
+          `/api/search-image?q=${encodeURIComponent(raw)}`
+        );
+        const data = (await res.json()) as { imageUrl?: string; error?: string };
+        if (!res.ok) throw new Error(data.error ?? "Image search failed");
+        if (data.imageUrl) {
+          setCards((prev) =>
+            prev.map((c) =>
+              c.id === card.id ? { ...c, imageUrl: data.imageUrl! } : c
+            )
+          );
+        }
+      } catch {
+        // Leave card unchanged; could show toast
+      } finally {
+        setRegeneratingImageCardId(null);
+      }
+    },
+    [getImageSearchQuery]
+  );
+
+  const handleGenerateImagesByAi = useCallback(async () => {
+    const needImage = cards.filter(
+      (c) =>
+        !c.imageUrl &&
+        (getImageSearchQuery(c) !== "")
+    );
+    if (needImage.length === 0) return;
     setIsGeneratingImages(true);
-    setTimeout(() => setIsGeneratingImages(false), 2000);
-  }, []);
+    try {
+      const results = await Promise.allSettled(
+        needImage.map(async (card) => {
+          const q = getImageSearchQuery(card);
+          const res = await fetch(
+            `/api/search-image?q=${encodeURIComponent(q)}`
+          );
+          const data = (await res.json()) as {
+            imageUrl?: string;
+            error?: string;
+          };
+          if (!res.ok || !data.imageUrl) return { id: card.id, imageUrl: null };
+          return { id: card.id, imageUrl: data.imageUrl };
+        })
+      );
+      const updates = new Map<string, string>();
+      results.forEach((r) => {
+        if (r.status === "fulfilled" && r.value.imageUrl) {
+          updates.set(r.value.id, r.value.imageUrl);
+        }
+      });
+      if (updates.size > 0) {
+        setCards((prev) =>
+          prev.map((c) => {
+            const url = updates.get(c.id);
+            return url ? { ...c, imageUrl: url } : c;
+          })
+        );
+      }
+    } finally {
+      setIsGeneratingImages(false);
+    }
+  }, [cards, getImageSearchQuery]);
 
   const handleGenerateAudioByAi = useCallback(() => {
     setIsGeneratingAudio(true);
@@ -251,7 +296,12 @@ export function GeneratorView() {
                   <Button
                     type="button"
                     onClick={handleGenerateImagesByAi}
-                    disabled={isGeneratingImages}
+                    disabled={
+                      isGeneratingImages ||
+                      !cards.some(
+                        (c) => !c.imageUrl && getImageSearchQuery(c) !== ""
+                      )
+                    }
                     className={generateByAiButtonClass}
                   >
                     <Icon icon="solar:magic-stick-3-bold" className="size-5" />
