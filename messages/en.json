@@ -173,7 +173,7 @@
       "frontAudio": "Front audio",
       "exampleAudio": "Example audio",
       "play": "Play",
-      "regenerate": "Regenerate",
+      "regenerate": "Generate AI",
       "uploadImage": "Upload image",
       "loading": "Generating…"
     },
