@@ -64,7 +64,7 @@ export function GeneratorCard({
       </p>
 
       {/* Image placeholder (Step 2, 3, 4) */}
-      {(step === 2 || step === 3 || step === 4) && (
+      {(step === 2 || step === 4) && (
         <div className="mt-4 rounded-xl bg-ink/5 border-2 border-dashed border-ink/20 aspect-video flex flex-col items-center justify-center gap-2 overflow-hidden relative">
           {card.imageUrl && !isRegeneratingImage ? (
             <img src={card.imageUrl} alt="" className="w-full h-full object-cover rounded-xl" />
@@ -111,7 +111,7 @@ export function GeneratorCard({
       )}
 
       {/* Audio placeholders (Step 3, 4) */}
-      {(step === 3 || step === 4) && (
+      {(step === 4) && (
         <div className="mt-4 flex flex-wrap gap-3">
           <div className="flex flex-1 items-center gap-2 rounded-xl bg-ink/5 border border-ink/10 px-3 py-2">
             <button

@@ -42,7 +42,7 @@ export const DECK_RESPONSE_SCHEMA: ResponseSchema = {
     cards: {
       type: SchemaType.ARRAY,
       description: "List of flashcard objects",
-      items: cardSchema,
+      items: cardSchema as any,
     },
   },
   required: ["cards"],
