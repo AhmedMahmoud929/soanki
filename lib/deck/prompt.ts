@@ -8,14 +8,16 @@ const LANGUAGE_NAMES: Record<DeckPromptLanguage, string> = {
 };
 
 /**
- * Build system prompt for deck generation with optional language and CEFR level.
- * Defaults: German, A2 (slightly above A2).
+ * Build system prompt for deck generation with optional language, explaining language, and CEFR level.
+ * Defaults: German vocabulary, English explanations, A2.
  */
 export function getDeckGenerationSystemPrompt(
   language: DeckPromptLanguage = "de",
-  level: DeckPromptLevel = "A2"
+  level: DeckPromptLevel = "A2",
+  explainingLanguage: DeckPromptLanguage = "en"
 ): string {
   const langName = LANGUAGE_NAMES[language];
+  const explainLangName = LANGUAGE_NAMES[explainingLanguage];
   const levelInstruction =
     level === "A1"
       ? "Use very simple vocabulary and short sentences (A1 level)."
@@ -51,10 +53,10 @@ The image description should clearly illustrate the example and emphasize the me
 
 Format:
 - front: the word or phrase in ${langName} (with article for ${langName} nouns if applicable).
-- back: translation or meaning in English (or the learner's target language).
-- example: one example sentence at ${level} level.
-- imageDescription: #IMAGE# followed by a short scene description in English.
-- type: part of speech (e.g. noun masculine, verb, adjective).
+- back: translation or meaning in ${explainLangName} only.
+- example: one example sentence at ${level} level (in ${langName}).
+- imageDescription: #IMAGE# followed by a short scene description in ${explainLangName}.
+- type: part of speech (e.g. noun masculine, verb, adjective); you may give the type label in ${explainLangName} if natural.
 
 Output only valid JSON with a "cards" array; no extra notes or explanations.`;
 }

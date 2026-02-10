@@ -80,7 +80,7 @@ export function GeneratorCard({
               )}
             </>
           )}
-          {!card.imageUrl && <div className="flex gap-2 mt-1">
+          {<div className={cn("flex gap-2 mt-1", card.imageUrl && "absolute bottom-4 left-1/2 -translate-x-1/2")}>
             <button
               type="button"
               disabled={
@@ -95,14 +95,15 @@ export function GeneratorCard({
                   !isRegeneratingImage &&
                   (!!card.imageDescription?.trim() || !!card.word?.trim())
                   ? "bg-soft-blue/20 text-soft-blue-dark hover:bg-soft-blue/30 cursor-pointer"
-                  : "bg-ink/10 text-ink/40 cursor-not-allowed"
+                  : "bg-ink/10 text-ink/40 cursor-not-allowed",
+                card.imageUrl && "bg-soft-blue-dark text-white hover:bg-soft-blue-dark/90"
               )}
             >
               {isRegeneratingImage ? t("loading") : t("regenerate")}
             </button>
             <button
               type="button"
-              className="rounded-lg px-3 py-1.5 text-xs font-medium bg-soft-blue/20 text-soft-blue-dark hover:bg-soft-blue/30 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-soft-blue"
+              className={cn("rounded-lg px-3 py-1.5 text-xs font-medium bg-soft-blue/20 text-soft-blue-dark hover:bg-soft-blue/30 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-soft-blue", card.imageUrl && "bg-white text-soft-blue-dark hover:bg-soft-blue/10")}
             >
               {t("uploadImage")}
             </button>

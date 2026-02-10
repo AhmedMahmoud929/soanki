@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Icon } from "@iconify/react";
 import { getTranslations } from "next-intl/server";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 
 export async function Hero() {
   const t = await getTranslations("Hero");
@@ -34,13 +34,13 @@ export async function Hero() {
           >
             {t("getStarted")}
           </Link>
-          <a
+          <Link
             href="#"
             className="w-full sm:w-auto px-8 py-4 bg-white text-ink text-xl font-bold rounded-2xl border-2 border-ink/10 shadow-sm hover:border-soft-blue-dark hover:text-soft-blue-dark transition-all flex items-center justify-center gap-2"
           >
             <Icon icon="solar:play-circle-bold" className="text-2xl" />
             {t("watchDemo")}
-          </a>
+          </Link>
         </div>
         <div className="mt-20 relative mx-auto max-w-3xl">
           <div className="bg-white p-2 rounded-3xl shadow-xl border-4 border-ink/5 transform rotate-1 hover:rotate-0 transition-transform duration-500">

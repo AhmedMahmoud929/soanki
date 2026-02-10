@@ -25,10 +25,18 @@ export async function POST(request: Request) {
 
     const language =
       body.language === "en" || body.language === "ar" ? body.language : "de";
+    const explainingLanguage =
+      body.explainingLanguage === "de" || body.explainingLanguage === "ar"
+        ? body.explainingLanguage
+        : "en";
     const level =
       ["A1", "A2", "B1", "B2", "C1"].includes(body.level) ? body.level : "A2";
 
-    const cards = await generateDeckWithGemini(words, { language, level });
+    const cards = await generateDeckWithGemini(words, {
+      language,
+      explainingLanguage,
+      level,
+    });
     return NextResponse.json({ cards });
   } catch (err) {
     console.error("generate-deck API error:", err);

@@ -138,6 +138,7 @@
     },
     "options": {
       "language": "Sprache",
+      "explainingLanguage": "Erklärung auf",
       "level": "Niveau",
       "languageDe": "Deutsch",
       "languageEn": "Englisch",

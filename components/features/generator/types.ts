@@ -20,7 +20,11 @@ export type GeneratorLanguage = "de" | "en" | "ar";
 /** CEFR level for example sentences and complexity. */
 export type GeneratorLevel = "A1" | "A2" | "B1" | "B2" | "C1";
 
+/** Language for meanings and explanations (back of card). */
+export type GeneratorExplainingLanguage = GeneratorLanguage;
+
 export interface GenerationOptions {
   language: GeneratorLanguage;
+  explainingLanguage: GeneratorExplainingLanguage;
   level: GeneratorLevel;
 }

@@ -9,6 +9,7 @@ export type GenerateDeckOptions = {
   apiKey?: string;
   model?: string;
   language?: "de" | "en" | "ar";
+  explainingLanguage?: "de" | "en" | "ar";
   level?: "A1" | "A2" | "B1" | "B2" | "C1";
 };
 
@@ -28,8 +29,9 @@ export async function generateDeckWithGemini(
 
   const modelId = options?.model ?? process.env.GEMINI_API_MODEL ?? DEFAULT_MODEL;
   const language = options?.language ?? "de";
+  const explainingLanguage = options?.explainingLanguage ?? "en";
   const level = options?.level ?? "A2";
-  const systemPrompt = getDeckGenerationSystemPrompt(language, level);
+  const systemPrompt = getDeckGenerationSystemPrompt(language, level, explainingLanguage);
   const inputList = words.join(", ");
   const userPrompt = `Input: ${inputList}`;
   const fullPrompt = [systemPrompt, userPrompt].join("\n\n");

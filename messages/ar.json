@@ -138,6 +138,7 @@
     },
     "options": {
       "language": "اللغة",
+      "explainingLanguage": "الشرح بـ",
       "level": "المستوى",
       "languageDe": "الألمانية",
       "languageEn": "الإنجليزية",

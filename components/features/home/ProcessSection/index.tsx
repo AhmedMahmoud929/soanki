@@ -1,5 +1,6 @@
 import { Icon } from "@iconify/react";
 import { getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 
 const stepKeys = ["1", "2", "3", "4", "5", "6"] as const;
 const stepIcons = [
@@ -81,13 +82,13 @@ export async function ProcessSection() {
                     {key === "1" ? (
                       <>
                         {t("steps.1.descriptionBeforeLink")}
-                        <a
+                        <Link
                           href="/files/Soanki - Template.apkg"
                           download="Soanki - Template.apkg"
                           className="text-soft-blue-dark underline hover:text-soft-blue-dark/80"
                         >
                           {t("steps.1.downloadLink")}
-                        </a>
+                        </Link>
                         {t("steps.1.descriptionAfterLink")}
                       </>
                     ) : (

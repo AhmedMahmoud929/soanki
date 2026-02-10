@@ -12,17 +12,32 @@ import {
 } from "@/components/ui/select";
 import { GeneratorCard } from "../GeneratorCard";
 import { CardSkeleton } from "../CardSkeleton";
-import type { GeneratorCard as CardType, GeneratorLanguage, GeneratorLevel } from "../types";
+import type {
+  GeneratorCard as CardType,
+  GeneratorLanguage,
+  GeneratorExplainingLanguage,
+  GeneratorLevel,
+} from "../types";
 import Image from "next/image";
 
 const selectTriggerClass =
   "rounded-xl border-2 border-ink/10 bg-paper h-auto px-4 py-2.5 text-ink font-[family-name:var(--font-fredoka)] focus:border-soft-blue focus:ring-2 focus:ring-soft-blue/20 w-[180px]";
+
+const EXPLAINING_LANGUAGES: GeneratorExplainingLanguage[] = ["en", "de", "ar"];
+
+const explainingLanguageFlags: Record<GeneratorExplainingLanguage, string> = {
+  en: "/images/flags/united-kingdom.png",
+  de: "/images/flags/german.png",
+  ar: "/images/flags/egypt.png",
+};
 
 type GeneratorStep1InputProps = {
   inputText: string;
   setInputText: (value: string) => void;
   language: GeneratorLanguage;
   setLanguage: (value: GeneratorLanguage) => void;
+  explainingLanguage: GeneratorExplainingLanguage;
+  setExplainingLanguage: (value: GeneratorExplainingLanguage) => void;
   level: GeneratorLevel;
   setLevel: (value: GeneratorLevel) => void;
   onGenerate: () => void;
@@ -46,6 +61,8 @@ export function GeneratorStep1Input({
   setInputText,
   language,
   setLanguage,
+  explainingLanguage,
+  setExplainingLanguage,
   level,
   setLevel,
   onGenerate,
@@ -94,6 +111,43 @@ export function GeneratorStep1Input({
                     </div>
                   </SelectItem>
                   {/* <SelectItem value="ar">{t("options.languageAr")}</SelectItem> */}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <label
+                htmlFor="gen-explaining-language"
+                className="block text-sm font-medium text-ink/70 mb-1.5 font-[family-name:var(--font-fredoka)]"
+              >
+                {t("options.explainingLanguage")}
+              </label>
+              <Select
+                value={explainingLanguage}
+                onValueChange={(value) =>
+                  setExplainingLanguage(value as GeneratorExplainingLanguage)
+                }
+              >
+                <SelectTrigger
+                  id="gen-explaining-language"
+                  className={selectTriggerClass}
+                >
+                  <SelectValue placeholder={t("options.explainingLanguage")} />
+                </SelectTrigger>
+                <SelectContent>
+                  {EXPLAINING_LANGUAGES.map((code) => (
+                    <SelectItem key={code} value={code}>
+                      <div className="flex items-center gap-2">
+                        <Image
+                          src={explainingLanguageFlags[code]}
+                          alt=""
+                          width={20}
+                          height={20}
+                          className="rounded-sm object-cover shrink-0"
+                        />
+                        <span>{t(`options.language${code === "en" ? "En" : code === "de" ? "De" : "Ar"}`)}</span>
+                      </div>
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>

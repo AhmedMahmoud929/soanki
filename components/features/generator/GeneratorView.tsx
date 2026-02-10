@@ -5,7 +5,12 @@ import { useTranslations } from "next-intl";
 import { Stepper, type GeneratorStep } from "./Stepper";
 import { AddCardDialog } from "./AddCardDialog";
 import { useApiMutation } from "@/lib/hooks";
-import type { GeneratorCard as CardType, GeneratorLanguage, GeneratorLevel } from "./types";
+import type {
+  GeneratorCard as CardType,
+  GeneratorLanguage,
+  GeneratorExplainingLanguage,
+  GeneratorLevel,
+} from "./types";
 import {
   GeneratorStep1Input,
   GeneratorStep2Cards,
@@ -63,6 +68,8 @@ export function GeneratorView() {
   const [currentStep, setCurrentStep] = useState<GeneratorStep>(1);
   const [inputText, setInputText] = useState("");
   const [language, setLanguage] = useState<GeneratorLanguage>("de");
+  const [explainingLanguage, setExplainingLanguage] =
+    useState<GeneratorExplainingLanguage>("en");
   const [level, setLevel] = useState<GeneratorLevel>("A2");
   const [cards, setCards] = useState<CardType[]>([]);
   const [pendingCardCount, setPendingCardCount] = useState(0);
@@ -75,13 +82,23 @@ export function GeneratorView() {
 
   const generateDeck = useApiMutation<
     GenerateDeckResponse,
-    { words: string[]; language: GeneratorLanguage; level: GeneratorLevel }
+    {
+      words: string[];
+      language: GeneratorLanguage;
+      explainingLanguage: GeneratorExplainingLanguage;
+      level: GeneratorLevel;
+    }
   >({
-    mutationFn: async ({ words, language, level }) => {
+    mutationFn: async ({ words, language, explainingLanguage, level }) => {
       const res = await fetch("/api/generate-deck", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ words, language, level }),
+        body: JSON.stringify({
+          words,
+          language,
+          explainingLanguage,
+          level,
+        }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -128,8 +145,13 @@ export function GeneratorView() {
       .filter(Boolean);
     if (lines.length === 0) return;
     setPendingCardCount(lines.length);
-    generateDeck.mutate({ words: lines, language, level });
-  }, [inputText, language, level, generateDeck.mutate]);
+    generateDeck.mutate({
+      words: lines,
+      language,
+      explainingLanguage,
+      level,
+    });
+  }, [inputText, language, explainingLanguage, level, generateDeck.mutate]);
 
   const handleFileUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -343,6 +365,8 @@ export function GeneratorView() {
             setInputText={setInputText}
             language={language}
             setLanguage={setLanguage}
+            explainingLanguage={explainingLanguage}
+            setExplainingLanguage={setExplainingLanguage}
             level={level}
             setLevel={setLevel}
             onGenerate={handleGenerate}
