@@ -5,9 +5,21 @@ import { useTranslations } from "next-intl";
 import { Icon } from "@iconify/react";
 import { Stepper, type GeneratorStep } from "./Stepper";
 import { GeneratorCard } from "./GeneratorCard";
+import { CardSkeleton } from "./CardSkeleton";
 import { Button } from "@/components/ui/button";
+import { useApiMutation } from "@/lib/hooks";
 import type { GeneratorCard as CardType } from "./types";
 import { cn } from "@/lib/utils";
+
+type GenerateDeckResponse = {
+  cards: Array<{
+    front: string;
+    back: string;
+    example: string;
+    imageDescription: string;
+    type: string;
+  }>;
+};
 
 function createCard(overrides: Partial<CardType> & { word: string }): CardType {
   return {
@@ -16,6 +28,7 @@ function createCard(overrides: Partial<CardType> & { word: string }): CardType {
     meaning: overrides.meaning ?? "",
     example: overrides.example ?? "",
     partOfSpeech: overrides.partOfSpeech ?? "",
+    imageDescription: overrides.imageDescription,
     imageUrl: overrides.imageUrl,
     frontAudioUrl: overrides.frontAudioUrl,
     exampleAudioUrl: overrides.exampleAudioUrl,
@@ -36,11 +49,56 @@ export function GeneratorView() {
   const [currentStep, setCurrentStep] = useState<GeneratorStep>(1);
   const [inputText, setInputText] = useState("");
   const [cards, setCards] = useState<CardType[]>([]);
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [pendingCardCount, setPendingCardCount] = useState(0);
   const [isGeneratingImages, setIsGeneratingImages] = useState(false);
   const [isGeneratingAudio, setIsGeneratingAudio] = useState(false);
   const [isPreparingDeck, setIsPreparingDeck] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const generateDeck = useApiMutation<GenerateDeckResponse, string[]>({
+    mutationFn: async (words) => {
+      const res = await fetch("/api/generate-deck", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ words }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error ?? "Failed to generate deck");
+      }
+      return data as GenerateDeckResponse;
+    },
+    onSuccess: (data) => {
+      setCards(
+        data.cards.map((c) =>
+          createCard({
+            word: c.front,
+            meaning: c.back,
+            example: c.example,
+            partOfSpeech: c.type,
+            imageDescription: c.imageDescription,
+            loading: false,
+          })
+        )
+      );
+      setPendingCardCount(0);
+      setCurrentStep(2);
+    },
+    onError: (err, variables) => {
+      setCards(
+        variables.map((word) =>
+          createCard({
+            word,
+            meaning: `Error: ${err.message}`,
+            example: "",
+            partOfSpeech: "",
+            loading: false,
+          })
+        )
+      );
+      setPendingCardCount(0);
+    },
+  });
 
   const handleGenerate = useCallback(() => {
     const lines = inputText
@@ -48,33 +106,9 @@ export function GeneratorView() {
       .map((s) => s.trim())
       .filter(Boolean);
     if (lines.length === 0) return;
-    setIsGenerating(true);
-    setCards(
-      lines.map((word) =>
-        createCard({
-          word,
-          meaning: "",
-          example: "",
-          partOfSpeech: "",
-          loading: true,
-        })
-      )
-    );
-    // Simulate progress: clear loading after a short delay and fill placeholders
-    setTimeout(() => {
-      setCards((prev) =>
-        prev.map((c) => ({
-          ...c,
-          loading: false,
-          meaning: `Meaning for ${c.word}`,
-          example: `Example sentence for ${c.word}.`,
-          partOfSpeech: "noun",
-        }))
-      );
-      setIsGenerating(false);
-      setCurrentStep(2);
-    }, 1500);
-  }, [inputText]);
+    setPendingCardCount(lines.length);
+    generateDeck.mutate(lines);
+  }, [inputText, generateDeck.mutate]);
 
   const handleFileUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -126,7 +160,7 @@ export function GeneratorView() {
         <p className="mt-2 text-ink/60 font-[family-name:var(--font-fredoka)]">{t("subtitle")}</p>
       </div>
 
-      <Stepper currentStep={currentStep} onStepClick={setCurrentStep} />
+      <Stepper currentStep={currentStep} onStepClick={setCurrentStep} disabled={cards.length === 0 || generateDeck.isLoading} />
 
       <div className="container mx-auto px-4 py-8 max-w-5xl">
         {/* Step 1: Input */}
@@ -147,11 +181,11 @@ export function GeneratorView() {
               <div className="mt-4 flex flex-wrap items-center gap-3">
                 <Button
                   onClick={handleGenerate}
-                  disabled={isGenerating}
+                  disabled={generateDeck.isLoading}
                   className={generateByAiButtonClass}
                 >
                   <Icon icon="solar:magic-stick-3-bold" className="size-5" />
-                  {isGenerating ? t("card.loading") : t("generateByAi.step1")}
+                  {generateDeck.isLoading ? t("card.loading") : t("generateByAi.step1")}
                 </Button>
                 <span className="text-ink/50 font-[family-name:var(--font-fredoka)]">{t("input.or")}</span>
                 <input
@@ -270,8 +304,22 @@ export function GeneratorView() {
           </section>
         )}
 
-        {/* Show cards also on step 1 after generate (optional: show empty state when no cards) */}
-        {currentStep === 1 && cards.length > 0 && (
+        {/* Step 1: show skeletons while generating */}
+        {currentStep === 1 && generateDeck.isLoading && pendingCardCount > 0 && (
+          <section className="mt-10">
+            <p className="text-ink/60 font-[family-name:var(--font-fredoka)] mb-4">
+              {t("export.previewHint")}
+            </p>
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {Array.from({ length: pendingCardCount }, (_, i) => (
+                <CardSkeleton key={i} />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Step 1: show cards after error (or preview when no loading) */}
+        {currentStep === 1 && cards.length > 0 && !generateDeck.isLoading && (
           <section className="mt-10">
             <p className="text-ink/60 font-[family-name:var(--font-fredoka)] mb-4">
               {t("export.previewHint")}

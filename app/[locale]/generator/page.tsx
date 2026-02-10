@@ -1,5 +1,5 @@
 import { setRequestLocale } from "next-intl/server";
-import { GeneratorView } from "@/components/pages/generator/GeneratorView";
+import { GeneratorView } from "@/components/features/generator";
 
 type Props = { params: Promise<{ locale: string }> };
 

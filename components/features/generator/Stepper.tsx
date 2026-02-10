@@ -9,11 +9,12 @@ export type GeneratorStep = 1 | 2 | 3 | 4;
 type StepperProps = {
   currentStep: GeneratorStep;
   onStepClick?: (step: GeneratorStep) => void;
+  disabled?: boolean;
 };
 
 const steps: GeneratorStep[] = [1, 2, 3, 4];
 
-export function Stepper({ currentStep, onStepClick }: StepperProps) {
+export function Stepper({ currentStep, onStepClick, disabled = false }: StepperProps) {
   const t = useTranslations("Generator.stepper");
 
   const labels: Record<GeneratorStep, string> = {
@@ -36,10 +37,12 @@ export function Stepper({ currentStep, onStepClick }: StepperProps) {
             <button
               type="button"
               onClick={() => onStepClick?.(step)}
+              disabled={disabled}
               className={cn(
                 "flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold transition-all",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-soft-blue focus-visible:ring-offset-2",
-                isActive && "bg-soft-blue-dark text-white shadow-md",
+                disabled && "opacity-60 cursor-not-allowed",
+                isActive && "opacity-100 cursor-pointer bg-soft-blue-dark text-white shadow-md",
                 isPast && "bg-soft-blue/20 text-soft-blue-dark",
                 !isActive && !isPast && "bg-ink/5 text-ink/60 hover:bg-ink/10 hover:text-ink"
               )}

@@ -5,7 +5,7 @@ import {
   ProcessSection,
   FeaturesSection,
   CTASection,
-} from "@/components/pages/home";
+} from "@/components/features/home";
 
 type Props = { params: Promise<{ locale: string }> };
 

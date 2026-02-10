@@ -1,4 +1,35 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Soanki
+
+Automate your Anki vocab decks: generate flashcards with AI (Gemini), images, and audio. Supports English, German, and Arabic with RTL.
+
+## Project structure
+
+```
+├── app/
+│   ├── [locale]/           # Locale-based routes (en, de, ar)
+│   │   ├── layout.tsx      # Layout, fonts, Navbar, Footer
+│   │   ├── page.tsx        # Home
+│   │   ├── generator/      # Deck generator page
+│   │   └── globals.css
+│   └── api/
+│       └── generate-deck/  # POST: generate deck via Gemini
+├── components/
+│   ├── features/          # Feature-specific UI
+│   │   ├── home/           # Landing sections (Hero, Process, etc.)
+│   │   └── generator/      # Generator (Stepper, cards, view)
+│   ├── layout/             # Navbar, Footer
+│   └── ui/                 # Shared UI (Button, Dropdown)
+├── i18n/                   # next-intl routing & navigation
+├── lib/
+│   ├── deck/               # Deck generation (Gemini prompt, parser, types)
+│   └── utils.ts
+├── messages/               # en.json, de.json, ar.json
+└── public/
+```
+
+- **API**: `app/api/*` — thin handlers; business logic in `lib/`.
+- **Deck generation**: Prompt, parser, and Gemini call in `lib/deck/`; route only parses request and returns JSON.
+- **Features**: `components/features/<name>/` — one folder per feature (home, generator).
 
 ## Getting Started
 
@@ -14,9 +45,9 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000). For the deck generator use `/en/generator` (or `/de`, `/ar`).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+**Environment:** Copy `.env.example` to `.env.local` and set `GEMINI_API_KEY` ([Google AI Studio](https://aistudio.google.com/apikey)) for the generate-deck API.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 

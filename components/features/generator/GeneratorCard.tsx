@@ -63,13 +63,13 @@ export function GeneratorCard({ card, step, onRemove }: GeneratorCardProps) {
               <Icon icon="solar:gallery-bold" className="size-10 text-ink/30" />
               <span className="text-xs text-ink/50 font-[family-name:var(--font-fredoka)]">{t("imagePlaceholder")}</span>
               <div className="flex gap-2">
-                <button
+                {/* <button
                   type="button"
                   disabled
                   className="rounded-lg px-3 py-1.5 text-xs font-medium bg-ink/10 text-ink/40 cursor-not-allowed"
                 >
                   {t("regenerate")}
-                </button>
+                </button> */}
                 <button
                   type="button"
                   className="rounded-lg px-3 py-1.5 text-xs font-medium bg-soft-blue/20 text-soft-blue-dark hover:bg-soft-blue/30 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-soft-blue"
