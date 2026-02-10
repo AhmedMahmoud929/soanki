@@ -61,5 +61,30 @@ Format:
 Output only valid JSON with a "cards" array; no extra notes or explanations.`;
 }
 
+/**
+ * Build prompt for generating one alternate example + image description for a word.
+ * Used when image search fails so we can try a different, more visual example.
+ */
+export function getAlternateExamplePrompt(
+  language: DeckPromptLanguage = "de",
+  level: DeckPromptLevel = "A2",
+  explainingLanguage: DeckPromptLanguage = "en"
+): string {
+  const langName = LANGUAGE_NAMES[language];
+  const explainLangName = LANGUAGE_NAMES[explainingLanguage];
+  const levelInstruction =
+    level === "A1"
+      ? "Use very simple vocabulary and short sentences (A1 level)."
+      : level === "C1"
+        ? "Use rich, nuanced vocabulary and complex sentences (C1 level)."
+        : `Keep the example at ${level} level.`;
+  return `Generate ONE alternate example sentence and image description for the given word. The example must be different from any previous one and must describe a clear, easy-to-illustrate scene (so we can find an image for it). Use ${langName} for the example and ${explainLangName} for the image description.
+${levelInstruction}
+Rules:
+- example: one example sentence in ${langName} that clearly evokes a visual scene.
+- imageDescription: start with #IMAGE# then a short scene description in ${explainLangName} (something that would return good image search results).
+Output only valid JSON with keys: example, imageDescription.`;
+}
+
 /** @deprecated Use getDeckGenerationSystemPrompt() for dynamic language/level. */
 export const DECK_GENERATION_SYSTEM_PROMPT = getDeckGenerationSystemPrompt("de", "A2");

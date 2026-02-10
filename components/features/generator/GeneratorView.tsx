@@ -181,45 +181,39 @@ export function GeneratorView() {
     return raw;
   }, []);
 
-  const handleRegenerateImage = useCallback(
-    async (card: CardType) => {
-      const raw = getImageSearchQuery(card);
-      if (!raw) return;
-      setRegeneratingImageCardId(card.id);
-      try {
-        const res = await fetch(
-          `/api/search-image?q=${encodeURIComponent(raw)}`
-        );
-        const data = (await res.json()) as { imageUrl?: string; error?: string };
-        if (!res.ok) throw new Error(data.error ?? "Image search failed");
-        if (data.imageUrl) {
-          setCards((prev) =>
-            prev.map((c) =>
-              c.id === card.id ? { ...c, imageUrl: data.imageUrl! } : c
-            )
-          );
-        }
-      } catch {
-        // Leave card unchanged; could show toast
-      } finally {
-        setRegeneratingImageCardId(null);
-      }
-    },
-    [getImageSearchQuery]
-  );
+  /** Build fallback search queries when the primary returns no image. */
+  const getImageSearchFallbacks = useCallback((card: CardType) => {
+    const primary = getImageSearchQuery(card);
+    const fallbacks: string[] = [];
+    if (card.meaning?.trim()) fallbacks.push(card.meaning.trim());
+    if (card.word?.trim() && card.meaning?.trim() && card.word !== primary) {
+      fallbacks.push(`${card.word} ${card.meaning}`);
+    }
+    if (card.word?.trim() && !fallbacks.includes(card.word.trim())) {
+      fallbacks.push(card.word.trim());
+    }
+    return [primary, ...fallbacks].filter((q) => q.length > 0);
+  }, [getImageSearchQuery]);
 
-  const handleGenerateImagesByAi = useCallback(async () => {
-    const needImage = cards.filter(
-      (c) =>
-        !c.imageUrl &&
-        (getImageSearchQuery(c) !== "")
-    );
-    if (needImage.length === 0) return;
-    setIsGeneratingImages(true);
-    try {
-      const results = await Promise.allSettled(
-        needImage.map(async (card) => {
-          const q = getImageSearchQuery(card);
+  type ImageForCardOptions = {
+    language: GeneratorLanguage;
+    explainingLanguage: GeneratorExplainingLanguage;
+    level: GeneratorLevel;
+  };
+
+  /** Try image search with fallbacks; if still no image and options given, generate alternate example and retry. */
+  const fetchImageForCard = useCallback(
+    async (
+      card: CardType,
+      options?: ImageForCardOptions
+    ): Promise<{
+      imageUrl: string | null;
+      newExample?: string;
+      newImageDescription?: string;
+    }> => {
+      const tryQuery = async (q: string): Promise<string | null> => {
+        if (!q.trim()) return null;
+        try {
           const res = await fetch(
             `/api/search-image?q=${encodeURIComponent(q)}`
           );
@@ -227,28 +221,154 @@ export function GeneratorView() {
             imageUrl?: string;
             error?: string;
           };
-          if (!res.ok || !data.imageUrl) return { id: card.id, imageUrl: null };
-          return { id: card.id, imageUrl: data.imageUrl };
+          if (res.ok && data.imageUrl) return data.imageUrl;
+        } catch {
+          // try next
+        }
+        return null;
+      };
+
+      const queries = getImageSearchFallbacks(card);
+      for (const q of queries) {
+        const imageUrl = await tryQuery(q);
+        if (imageUrl) return { imageUrl };
+      }
+
+      // No image from current content: generate another example and search for that
+      if (options?.language && options?.explainingLanguage && options?.level) {
+        try {
+          const res = await fetch("/api/generate-example", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              word: card.word,
+              meaning: card.meaning || undefined,
+              currentExample: card.example || undefined,
+              language: options.language,
+              explainingLanguage: options.explainingLanguage,
+              level: options.level,
+            }),
+          });
+          if (!res.ok) return { imageUrl: null };
+          const alt = (await res.json()) as {
+            example?: string;
+            imageDescription?: string;
+          };
+          const newDesc = (alt.imageDescription ?? "").replace(
+            /^#IMAGE#\s*-?\s*/i,
+            ""
+          ).trim();
+          const imageUrl =
+            (newDesc && (await tryQuery(newDesc))) ||
+            (alt.example?.trim() && (await tryQuery(alt.example.trim()))) ||
+            null;
+          if (imageUrl) {
+            return {
+              imageUrl,
+              newExample: alt.example?.trim(),
+              newImageDescription: alt.imageDescription?.trim(),
+            };
+          }
+        } catch {
+          // leave as no image
+        }
+      }
+
+      return { imageUrl: null };
+    },
+    [getImageSearchFallbacks]
+  );
+
+  const handleRegenerateImage = useCallback(
+    async (card: CardType) => {
+      if (!getImageSearchQuery(card) && !card.meaning?.trim() && !card.word?.trim()) return;
+      setRegeneratingImageCardId(card.id);
+      try {
+        const result = await fetchImageForCard(card, {
+          language,
+          explainingLanguage,
+          level,
+        });
+        if (result.imageUrl) {
+          setCards((prev) =>
+            prev.map((c) => {
+              if (c.id !== card.id) return c;
+              return {
+                ...c,
+                imageUrl: result.imageUrl!,
+                ...(result.newExample != null && { example: result.newExample }),
+                ...(result.newImageDescription != null && {
+                  imageDescription: result.newImageDescription,
+                }),
+              };
+            })
+          );
+        }
+      } catch {
+        // Leave card unchanged
+      } finally {
+        setRegeneratingImageCardId(null);
+      }
+    },
+    [getImageSearchQuery, fetchImageForCard, language, explainingLanguage, level]
+  );
+
+  const handleGenerateImagesByAi = useCallback(async () => {
+    const needImage = cards.filter(
+      (c) =>
+        !c.imageUrl &&
+        (getImageSearchQuery(c) !== "" || c.meaning?.trim() !== "" || c.word?.trim() !== "")
+    );
+    if (needImage.length === 0) return;
+    setIsGeneratingImages(true);
+    try {
+      const imageOptions = { language, explainingLanguage, level };
+      const results = await Promise.allSettled(
+        needImage.map(async (card) => {
+          const result = await fetchImageForCard(card, imageOptions);
+          return {
+            id: card.id,
+            imageUrl: result.imageUrl,
+            newExample: result.newExample,
+            newImageDescription: result.newImageDescription,
+          };
         })
       );
-      const updates = new Map<string, string>();
+      const updates = new Map<
+        string,
+        { imageUrl: string; example?: string; imageDescription?: string }
+      >();
       results.forEach((r) => {
         if (r.status === "fulfilled" && r.value.imageUrl) {
-          updates.set(r.value.id, r.value.imageUrl);
+          updates.set(r.value.id, {
+            imageUrl: r.value.imageUrl,
+            ...(r.value.newExample != null && { example: r.value.newExample }),
+            ...(r.value.newImageDescription != null && {
+              imageDescription: r.value.newImageDescription,
+            }),
+          });
         }
       });
       if (updates.size > 0) {
         setCards((prev) =>
           prev.map((c) => {
-            const url = updates.get(c.id);
-            return url ? { ...c, imageUrl: url } : c;
+            const u = updates.get(c.id);
+            if (!u) return c;
+            return {
+              ...c,
+              imageUrl: u.imageUrl,
+              ...(u.example != null && { example: u.example }),
+              ...(u.imageDescription != null && {
+                imageDescription: u.imageDescription,
+              }),
+            };
           })
         );
       }
     } finally {
       setIsGeneratingImages(false);
     }
-  }, [cards, getImageSearchQuery]);
+  }, [cards, getImageSearchQuery, fetchImageForCard, language, explainingLanguage, level]);
 
   const handleGenerateAudioByAi = useCallback(async () => {
     const needAudio = cards.filter(

@@ -47,3 +47,27 @@ export const DECK_RESPONSE_SCHEMA: ResponseSchema = {
   },
   required: ["cards"],
 };
+
+/** Schema for a single alternate example + image description (no full card). */
+const alternateExampleSchema = {
+  type: SchemaType.OBJECT,
+  description: "Alternate example sentence and image description",
+  properties: {
+    example: {
+      type: SchemaType.STRING,
+      description: "Example sentence in the vocabulary language",
+    },
+    imageDescription: {
+      type: SchemaType.STRING,
+      description: "Scene description for image search; must start with #IMAGE#",
+    },
+  },
+  required: ["example", "imageDescription"],
+} as const;
+
+export const ALTERNATE_EXAMPLE_RESPONSE_SCHEMA: ResponseSchema = {
+  type: SchemaType.OBJECT,
+  description: "Alternate example and image description",
+  properties: alternateExampleSchema.properties as any,
+  required: ["example", "imageDescription"],
+};
