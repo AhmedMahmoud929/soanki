@@ -1,6 +1,6 @@
 import { Icon } from "@iconify/react";
 import { getTranslations } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
+import Link from "next/link";
 
 const stepKeys = ["1", "2", "3", "4", "5", "6"] as const;
 const stepIcons = [
