@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon } from "@iconify/react";
+import Image from "next/image";
 import { useTranslations, useLocale } from "next-intl";
 import {
   DropdownMenu,
@@ -10,11 +10,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
-import { ChevronDown, Globe } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Logo } from "@/components/layout/Logo";
 
 const localeCodes = ["en", "de", "ar"] as const;
+
+const localeFlags: Record<(typeof localeCodes)[number], string> = {
+  en: "/images/flags/united-kingdom.png",
+  de: "/images/flags/german.png",
+  ar: "/images/flags/egypt.png",
+};
 
 export function Navbar() {
   const t = useTranslations("Navbar");
@@ -51,7 +57,13 @@ export function Navbar() {
                 variant="outline"
                 className="flex items-center gap-2 rounded-2xl bg-cream text-ink font-semibold hover:bg-soft-yellow/20 border-2 border-transparent hover:border-soft-yellow/50 px-4 py-2 h-auto"
               >
-                <Globe className="size-5" />
+                <Image
+                  src={localeFlags[locale as (typeof localeCodes)[number]] ?? localeFlags.en}
+                  alt=""
+                  width={20}
+                  height={20}
+                  className="rounded-sm object-cover shrink-0"
+                />
                 <span className="uppercase">{locale}</span>
                 <ChevronDown className="size-5" />
               </Button>
@@ -65,9 +77,16 @@ export function Navbar() {
                   <Link
                     href="/"
                     locale={code}
-                    className="block px-4 py-3 cursor-pointer font-medium hover:bg-cream"
+                    className="flex items-center gap-3 px-4 py-3 cursor-pointer font-medium hover:bg-cream"
                     dir={code === "ar" ? "rtl" : "ltr"}
                   >
+                    <Image
+                      src={localeFlags[code]}
+                      alt=""
+                      width={20}
+                      height={20}
+                      className="rounded-sm object-cover shrink-0"
+                    />
                     {t(`locales.${code}`)}
                   </Link>
                 </DropdownMenuItem>

@@ -38,12 +38,24 @@ function createCard(overrides: Partial<CardType> & { word: string }): CardType {
   };
 }
 
-function generateCsvPreview(cards: CardType[]): string {
-  const header = "Front,Back,Example,Image,Type";
-  const rows = cards.map((c) =>
-    [c.word, c.meaning, c.example, c.imageUrl ?? "", c.partOfSpeech].map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(",")
-  );
-  return [header, ...rows].join("\n");
+const EXPORT_SEPARATOR = "\t";
+
+function sanitizeCell(value: string): string {
+  return String(value).replace(/\t/g, " ").replace(/\r?\n/g, " ");
+}
+
+function generateExportTxt(cards: CardType[]): string {
+  const rows = cards.map((c) => {
+    const imageCell = c.imageUrl
+      ? `<img src="${sanitizeCell(c.imageUrl).replace(/"/g, "&quot;")}" />`
+      : "";
+    const front = sanitizeCell(c.word);
+    const back = sanitizeCell(c.meaning);
+    const example = sanitizeCell(c.example);
+    const type = sanitizeCell(c.partOfSpeech);
+    return [front, back, example, imageCell, type].join(EXPORT_SEPARATOR);
+  });
+  return rows.join("\n");
 }
 
 export function GeneratorView() {
@@ -300,17 +312,17 @@ export function GeneratorView() {
 
   const handleExportDeck = useCallback(() => {
     if (cards.length === 0) return;
-    const csv = generateCsvPreview(cards);
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const txt = generateExportTxt(cards);
+    const blob = new Blob([txt], { type: "text/plain;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "soanki-deck.csv";
+    a.download = "soanki-deck.txt";
     a.click();
     URL.revokeObjectURL(url);
   }, [cards]);
 
-  const csvPreview = cards.length > 0 ? generateCsvPreview(cards) : "";
+  const exportPreview = cards.length > 0 ? generateExportTxt(cards) : "";
 
   return (
     <div className="min-h-screen pb-20">
@@ -388,7 +400,7 @@ export function GeneratorView() {
               onAddCard={() => setAddCardOpen(true)}
             />
             <GeneratorStep4Export
-              csvPreview={csvPreview}
+              exportPreview={exportPreview}
               onPrepareDeck={handlePrepareDeckByAi}
               isPreparingDeck={isPreparingDeck}
               onExportDeck={handleExportDeck}

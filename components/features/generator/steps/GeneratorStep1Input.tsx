@@ -13,6 +13,7 @@ import {
 import { GeneratorCard } from "../GeneratorCard";
 import { CardSkeleton } from "../CardSkeleton";
 import type { GeneratorCard as CardType, GeneratorLanguage, GeneratorLevel } from "../types";
+import Image from "next/image";
 
 const selectTriggerClass =
   "rounded-xl border-2 border-ink/10 bg-paper h-auto px-4 py-2.5 text-ink font-[family-name:var(--font-fredoka)] focus:border-soft-blue focus:ring-2 focus:ring-soft-blue/20 w-[180px]";
@@ -79,9 +80,20 @@ export function GeneratorStep1Input({
                   <SelectValue placeholder={t("options.language")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="de">{t("options.languageDe")}</SelectItem>
-                  <SelectItem value="en">{t("options.languageEn")}</SelectItem>
-                  <SelectItem value="ar">{t("options.languageAr")}</SelectItem>
+                  <SelectItem value="de">
+                    <div className="flex items-center gap-2">
+                      <Image src="/images/flags/german.png" alt="German" width={20} height={20} />
+                      <span>{t("options.languageDe")}</span>
+
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="en">
+                    <div className="flex items-center gap-2">
+                      <Image src="/images/flags/united-kingdom.png" alt="English" width={20} height={20} />
+                      <span>{t("options.languageEn")}</span>
+                    </div>
+                  </SelectItem>
+                  {/* <SelectItem value="ar">{t("options.languageAr")}</SelectItem> */}
                 </SelectContent>
               </Select>
             </div>
