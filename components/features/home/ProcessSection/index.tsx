@@ -51,7 +51,7 @@ export async function ProcessSection() {
                 <div
                   className={`
                     w-full max-w-[320px] lg:max-w-none mx-auto rounded-2xl border-2 p-6 md:p-6
-                    transition-all duration-300 relative overflow-hidden 
+                    transition-all md:py-8 duration-300 relative overflow-hidden 
                     ${index === 5
                       ? "bg-soft-blue-dark text-white border-soft-blue-dark shadow-lg shadow-soft-blue-dark/25"
                       : "bg-white border-ink/10 shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-soft-hover)] hover:-translate-y-1"
@@ -71,7 +71,7 @@ export async function ProcessSection() {
                   >
                     <Icon
                       icon={stepIcons[index]}
-                      className={index === 5 ? "text-3xl text-white" : "text-3xl text-ink"}
+                      className={index === 5 ? "text-3xl text-white" : "text-3xl text-soft-blue-dark"}
                     />
                   </div>
                   <h3 className={`text-lg md:text-xl font-bold mb-2 font-[family-name:var(--font-fredoka)] ${index === 5 ? "text-white" : "text-ink"}`}>
@@ -97,13 +97,6 @@ export async function ProcessSection() {
                     )}
                   </p>
                 </div>
-
-                {/* Arrow between steps (desktop, except after last) */}
-                {index < stepKeys.length - 1 && (
-                  <div className="hidden lg:flex absolute -right-2 top-24 z-10 text-ink/20" aria-hidden>
-                    <Icon icon="solar:arrow-right-linear" className="size-6" />
-                  </div>
-                )}
               </div>
             ))}
           </div>
