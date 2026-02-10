@@ -339,7 +339,8 @@ export function GeneratorView() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "soanki-deck.txt";
+    const randomId = crypto.randomUUID().slice(0, 8);
+    a.download = `soanki-deck-${randomId}.txt`;
     a.click();
     URL.revokeObjectURL(url);
   }, [cards]);
