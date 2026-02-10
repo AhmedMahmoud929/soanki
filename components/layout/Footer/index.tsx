@@ -18,7 +18,7 @@ export async function Footer() {
   ] as const;
 
   return (
-    <footer className="py-12 bg-white border-t border-ink/5">
+    <footer className="py-12 bg-paper border-t border-ink/5">
       <div className="container mx-auto px-6">
         <div className="flex flex-col md:flex-row justify-between items-center gap-8">
           <Logo href="/" />

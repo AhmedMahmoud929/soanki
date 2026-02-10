@@ -5,7 +5,7 @@ export async function ComparisonSection() {
   const t = await getTranslations("Comparison");
 
   return (
-    <section className="py-24 bg-cream/50 relative">
+    <section className="py-24 md:py-32 bg-cream/50 relative">
       <div className="container mx-auto px-6">
         <div className="text-center mb-20">
           <h2 className="text-4xl md:text-5xl font-bold mb-6 text-ink font-[family-name:var(--font-fredoka)]">

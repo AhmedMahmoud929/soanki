@@ -23,9 +23,7 @@ export async function ProcessSection() {
   const t = await getTranslations("Process");
 
   return (
-    <section className="py-24 md:py-32 relative overflow-hidden" id="process">
-      {/* Soft background shape */}
-      <div className="absolute inset-0 bg-cream/20 pointer-events-none" />
+    <section className="py-24 md:py-32 relative overflow-hidden bg-paper" id="process">
       <div className="container mx-auto px-6 relative">
         <header className="text-center max-w-2xl mx-auto mb-16 md:mb-20">
           <span className="inline-block bg-soft-blue/10 text-soft-blue-dark px-4 py-2 rounded-full font-bold text-sm tracking-wide uppercase mb-4">
@@ -59,7 +57,7 @@ export async function ProcessSection() {
                   `}
                 >
                   <span
-                    className="absolute -top-4 -left-4 text-9xl opacity-20"
+                    className="absolute -top-4 -left-3 text-9xl opacity-10 font-semibold"
                   >
                     {key}
                   </span>

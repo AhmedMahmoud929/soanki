@@ -7,7 +7,7 @@ export async function Hero() {
   const t = await getTranslations("Hero");
 
   return (
-    <section className="relative pt-20 pb-32 overflow-hidden">
+    <section className="relative pt-20 pb-32 overflow-hidden bg-paper">
       <div className="absolute top-20 left-10 w-64 h-64 bg-soft-blue/10 rounded-[var(--radius-blob)] blur-2xl -z-10 animate-pulse" />
       <div className="absolute bottom-20 right-10 w-72 h-72 bg-soft-yellow/10 rounded-[var(--radius-blob)] blur-2xl -z-10" />
       <div className="container mx-auto px-6 text-center">
