@@ -135,6 +135,8 @@
       "or": "أو",
       "generate": "إنشاء",
       "addCard": "إضافة بطاقة",
+      "addCardDescription": "أدخل كلمة لإنشاء بطاقة واحدة بالذكاء الاصطناعي (المعنى، مثال، نوع الكلمة).",
+      "cancel": "إلغاء",
       "generateByAi": "إنشاء بالذكاء الاصطناعي"
     },
     "generateByAi": {
@@ -152,7 +154,7 @@
       "frontAudio": "صوت الوجه",
       "exampleAudio": "صوت المثال",
       "play": "تشغيل",
-      "regenerate": "إعادة إنشاء",
+      "regenerate": "توليد AI",
       "uploadImage": "رفع صورة",
       "loading": "جاري الإنشاء…"
     },

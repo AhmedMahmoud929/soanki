@@ -135,6 +135,8 @@
       "or": "oder",
       "generate": "Generieren",
       "addCard": "Karte hinzufügen",
+      "addCardDescription": "Gib ein Wort ein, um eine Karte mit KI zu erstellen (Bedeutung, Beispiel, Wortart).",
+      "cancel": "Abbrechen",
       "generateByAi": "Mit KI generieren"
     },
     "generateByAi": {

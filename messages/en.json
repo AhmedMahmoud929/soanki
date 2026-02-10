@@ -135,6 +135,8 @@
       "or": "or",
       "generate": "Generate",
       "addCard": "Add card",
+      "addCardDescription": "Enter a word to generate a single card with AI (meaning, example, part of speech).",
+      "cancel": "Cancel",
       "generateByAi": "Generate by AI"
     },
     "generateByAi": {

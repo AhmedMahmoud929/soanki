@@ -6,6 +6,7 @@ import { Icon } from "@iconify/react";
 import { Stepper, type GeneratorStep } from "./Stepper";
 import { GeneratorCard } from "./GeneratorCard";
 import { CardSkeleton } from "./CardSkeleton";
+import { AddCardDialog } from "./AddCardDialog";
 import { Button } from "@/components/ui/button";
 import { useApiMutation } from "@/lib/hooks";
 import type { GeneratorCard as CardType } from "./types";
@@ -50,6 +51,7 @@ export function GeneratorView() {
   const [inputText, setInputText] = useState("");
   const [cards, setCards] = useState<CardType[]>([]);
   const [pendingCardCount, setPendingCardCount] = useState(0);
+  const [addCardOpen, setAddCardOpen] = useState(false);
   const [isGeneratingImages, setIsGeneratingImages] = useState(false);
   const [isGeneratingAudio, setIsGeneratingAudio] = useState(false);
   const [isPreparingDeck, setIsPreparingDeck] = useState(false);
@@ -126,8 +128,8 @@ export function GeneratorView() {
     setCards((prev) => prev.filter((c) => c.id !== id));
   }, []);
 
-  const addEmptyCard = useCallback(() => {
-    setCards((prev) => [...prev, createCard({ word: "New word" })]);
+  const handleCardCreated = useCallback((card: CardType) => {
+    setCards((prev) => [...prev, card]);
   }, []);
 
   const handleGenerateImagesByAi = useCallback(() => {
@@ -242,7 +244,7 @@ export function GeneratorView() {
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={addEmptyCard}
+                  onClick={() => setAddCardOpen(true)}
                   className="rounded-xl border-2 border-soft-blue/30 text-soft-blue-dark hover:bg-soft-blue/10 font-[family-name:var(--font-fredoka)]"
                 >
                   <Icon icon="solar:add-circle-bold" className="size-5" />
@@ -337,6 +339,13 @@ export function GeneratorView() {
           </section>
         )}
       </div>
+
+      <AddCardDialog
+        open={addCardOpen}
+        onOpenChange={setAddCardOpen}
+        onCreated={handleCardCreated}
+        createCard={createCard}
+      />
     </div>
   );
 }
