@@ -1,3 +1,4 @@
+import { setRequestLocale } from "next-intl/server";
 import {
   Hero,
   ComparisonSection,
@@ -6,9 +7,13 @@ import {
   CTASection,
 } from "@/components/pages/home";
 
-export default function Home() {
-  return (
+type Props = { params: Promise<{ locale: string }> };
 
+export default async function HomePage({ params }: Props) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
+  return (
     <main>
       <Hero />
       <ComparisonSection />

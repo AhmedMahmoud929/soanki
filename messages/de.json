@@ -1,0 +1,123 @@
+{
+  "Navbar": {
+    "features": "Funktionen",
+    "howItWorks": "So funktioniert's",
+    "pricing": "Preise",
+    "startGenerating": "Jetzt erstellen",
+    "language": "Sprache",
+    "locales": {
+      "en": "English (EN)",
+      "de": "Deutsch (DE)",
+      "ar": "العربية (AR)"
+    }
+  },
+  "Hero": {
+    "badge": "Mit Gemini AI ✨",
+    "titleLine1": "Automatisiere deine",
+    "titleHighlight": "Anki-Vokabeln",
+    "subtitle": "Keine stundenlange manuelle Arbeit mehr. Erstelle schöne Karteikarten mit Bildern und natürlicher Aussprache in Sekunden. Ideal für Lernende.",
+    "getStarted": "Kostenlos starten",
+    "watchDemo": "Demo ansehen",
+    "heroImageAlt": "Screenshot der Soanki-Karteikarten-Oberfläche",
+    "wow": "Wow!"
+  },
+  "Comparison": {
+    "title": "Alter Weg vs. Soanki",
+    "subtitle": "Warum hart lernen, wenn du smart lernen kannst?",
+    "hardWay": "Der mühsame Weg 😓",
+    "soankiWay": "Der Soanki-Weg 🚀",
+    "hardWayTime": "~50 Min. pro Deck!",
+    "soankiWayTime": "~50 Sekunden!",
+    "hardWayItems": {
+      "manual": {
+        "title": "Kopieren & Einfügen",
+        "description": "Klicken, ziehen, kopieren, Tab wechseln, einfügen. 100x wiederholen."
+      },
+      "images": {
+        "title": "Bilder suchen",
+        "description": "Google-Bilder nach \"Apfel\" durchsuchen, ohne Logos zu erwischen."
+      },
+      "audio": {
+        "title": "Roboter-Stimmen",
+        "description": "Seltsame Computerstimmen herunterladen, die unnatürlich klingen."
+      }
+    },
+    "soankiWayItems": {
+      "instant": {
+        "title": "Sofort fertig",
+        "description": "Liste einfügen. Kaffee holen. Fertig."
+      },
+      "illustrations": {
+        "title": "KI-Bilder",
+        "description": "Passende Bilder werden automatisch erzeugt."
+      },
+      "speech": {
+        "title": "Natürliche Aussprache",
+        "description": "Klingt wie ein Muttersprachler, angepasst an dich."
+      }
+    }
+  },
+  "Process": {
+    "badge": "Die Reise",
+    "title": "Von der Wortliste zum Meister",
+    "subtitle": "Eine einfache 5-Schritte-Pipeline für Lernende.",
+    "steps": {
+      "1": {
+        "label": "Schritt 1",
+        "title": "Wörter eingeben",
+        "description": "Füge deine Vokabelliste ein oder lade eine Datei hoch. Wir kümmern uns um die Formatierung."
+      },
+      "2": {
+        "label": "Schritt 2",
+        "title": "Gemini-Analyse",
+        "description": "Unsere KI liest deine Wörter, versteht den Kontext, findet Definitionen und erstellt Beispielsätze."
+      },
+      "3": {
+        "label": "Schritt 3",
+        "title": "Visuelles Lernen",
+        "description": "Wir erzeugen einzigartige, einprägsame Bilder für jede Karte."
+      },
+      "4": {
+        "label": "Schritt 4",
+        "title": "Native Aussprache",
+        "description": "Text-to-Speech erzeugt die perfekte Aussprache in deiner Zielsprache."
+      },
+      "5": {
+        "label": "Schritt 5",
+        "title": "Deck herunterladen",
+        "description": "Lade deine .apkg-Datei. In Anki importieren und sofort loslegen!"
+      }
+    }
+  },
+  "Features": {
+    "title": "Für Lernende gemacht",
+    "items": {
+      "multilingual": {
+        "title": "Mehrsprachig",
+        "description": "Unterstützung für Englisch, Deutsch und Arabisch. RTL-Formatierung inklusive."
+      },
+      "smartContext": {
+        "title": "Smarter Kontext",
+        "description": "Gemini KI versteht Redewendungen und kulturelle Nuancen, nicht nur Übersetzungen."
+      },
+      "ankiCompatible": {
+        "title": "Anki-kompatibel",
+        "description": "Exportiere Decks direkt in dein Anki-Konto oder lade sie als Datei herunter."
+      }
+    }
+  },
+  "CTA": {
+    "title": "Bereit, deinen",
+    "titleHighlight": "Wortschatz",
+    "titleSuffix": "zu meistern?",
+    "subtitle": "Über 10.000 Lernende sparen sich Stunden. Lerne, was zählt – den Rest erledigen wir.",
+    "button": "Jetzt erstellen",
+    "noCard": "Keine Kreditkarte für die Testversion nötig"
+  },
+  "Footer": {
+    "privacy": "Datenschutz",
+    "terms": "Nutzungsbedingungen",
+    "contact": "Support",
+    "copyright": "© 2024 Soanki AI. Mit ♥ für Sprachlernende."
+  }
+}

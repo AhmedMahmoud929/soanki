@@ -1,0 +1,123 @@
+{
+  "Navbar": {
+    "features": "Features",
+    "howItWorks": "How it Works",
+    "pricing": "Pricing",
+    "startGenerating": "Start Generating",
+    "language": "Language",
+    "locales": {
+      "en": "English (EN)",
+      "de": "Deutsch (DE)",
+      "ar": "العربية (AR)"
+    }
+  },
+  "Hero": {
+    "badge": "Powered by Gemini AI magic ✨",
+    "titleLine1": "Automate your",
+    "titleHighlight": "Anki vocab decks",
+    "subtitle": "Stop wasting hours on manual data entry. Create beautiful, media-rich flashcards with images and native audio in seconds. Ideally simple for students.",
+    "getStarted": "Get Started for Free",
+    "watchDemo": "Watch Demo",
+    "heroImageAlt": "Screenshot of an elegant minimalist flashcard app interface",
+    "wow": "Wow!"
+  },
+  "Comparison": {
+    "title": "Old Way vs. Soanki Way",
+    "subtitle": "Why study hard when you can study smart?",
+    "hardWay": "The Hard Way 😓",
+    "soankiWay": "The Soanki Way 🚀",
+    "hardWayTime": "Takes ~50 mins per deck!",
+    "soankiWayTime": "Takes ~50 seconds!",
+    "hardWayItems": {
+      "manual": {
+        "title": "Manual Copy-Paste",
+        "description": "Click, drag, copy, switch tab, paste. Repeat 100x."
+      },
+      "images": {
+        "title": "Finding Images",
+        "description": "Searching Google images for \"apple\" without getting logos."
+      },
+      "audio": {
+        "title": "Robotic Audio",
+        "description": "Downloading weird computer voices that sound scary."
+      }
+    },
+    "soankiWayItems": {
+      "instant": {
+        "title": "Instant Magic",
+        "description": "Paste a list. Go grab a coffee. Done."
+      },
+      "illustrations": {
+        "title": "AI Illustrations",
+        "description": "Perfectly matching images generated on the fly."
+      },
+      "speech": {
+        "title": "Natural Speech",
+        "description": "Sounds like a real native speaker tailored to you."
+      }
+    }
+  },
+  "Process": {
+    "badge": "The Journey",
+    "title": "From Word List to Mastered",
+    "subtitle": "A simple 5-step automated pipeline designed for learners.",
+    "steps": {
+      "1": {
+        "label": "Step 1",
+        "title": "Input Your Words",
+        "description": "Simply paste your vocabulary list or upload a file. We handle the messy formatting for you."
+      },
+      "2": {
+        "label": "Step 2",
+        "title": "Gemini Analysis",
+        "description": "Our AI reads your words, understands the context, finds definitions, and creates example sentences."
+      },
+      "3": {
+        "label": "Step 3",
+        "title": "Visual Learning",
+        "description": "We generate unique, memorable images for each card to help stick the meaning in your brain."
+      },
+      "4": {
+        "label": "Step 4",
+        "title": "Native Audio",
+        "description": "High-fidelity Text-to-Speech generates perfect pronunciation in your target language."
+      },
+      "5": {
+        "label": "Step 5",
+        "title": "Download Deck",
+        "description": "Get your ready-to-use .apkg file. Import to Anki and start learning immediately!"
+      }
+    }
+  },
+  "Features": {
+    "title": "Built for Students",
+    "items": {
+      "multilingual": {
+        "title": "Multilingual Support",
+        "description": "Specialized support for English, German, and Arabic. We handle RTL formatting beautifully."
+      },
+      "smartContext": {
+        "title": "Smart Context",
+        "description": "Gemini AI understands idioms and cultural nuances, not just direct translations."
+      },
+      "ankiCompatible": {
+        "title": "Anki Compatible",
+        "description": "Seamlessly export generated decks directly to your Anki account or download as a file."
+      }
+    }
+  },
+  "CTA": {
+    "title": "Ready to",
+    "titleHighlight": "master",
+    "titleSuffix": "your vocabulary?",
+    "subtitle": "Join 10,000+ happy students saving thousands of hours. Study what matters, automate the rest.",
+    "button": "Start Generating Now",
+    "noCard": "No credit card required for trial"
+  },
+  "Footer": {
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "contact": "Contact Support",
+    "copyright": "© 2024 Soanki AI. Crafted with ♥ for language learners everywhere."
+  }
+}

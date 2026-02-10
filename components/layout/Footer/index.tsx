@@ -1,30 +1,34 @@
-import Link from "next/link";
+import { Icon } from "@iconify/react";
+import { getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 
-const footerLinks = [
-  { href: "#", label: "Privacy Policy" },
-  { href: "#", label: "Terms of Service" },
-  { href: "#", label: "Contact Support" },
-];
+export async function Footer() {
+  const t = await getTranslations("Footer");
 
-const socialLinks = [
-  { href: "#", icon: "thumb_up" },
-  { href: "#", icon: "public" },
-];
+  const footerLinks = [
+    { href: "#", label: t("privacy") },
+    { href: "#", label: t("terms") },
+    { href: "#", label: t("contact") },
+  ];
 
-export function Footer() {
+  const socialLinks = [
+    { href: "#", icon: "solar:like-bold" },
+    { href: "#", icon: "solar:global-bold" },
+  ] as const;
+
   return (
     <footer className="py-12 bg-white border-t border-ink/5">
       <div className="container mx-auto px-6">
         <div className="flex flex-col md:flex-row justify-between items-center gap-8">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-soft-blue text-white rounded-full flex items-center justify-center">
-              <span className="material-symbols-outlined text-xl">school</span>
+              <Icon icon="solar:graduation-bold" className="text-xl" />
             </div>
             <span className="text-xl font-bold tracking-tight text-ink font-[family-name:var(--font-fredoka)]">
               Soanki
             </span>
           </div>
-          <div className="flex gap-8 text-lg font-[family-name:var(--font-patrick-hand)] text-ink/60">
+          <div className="flex gap-8 text-lg font-[family-name:var(--font-fredoka)] text-ink/60">
             {footerLinks.map((link) => (
               <Link
                 key={link.label}
@@ -42,15 +46,13 @@ export function Footer() {
                 href={link.href}
                 className="w-12 h-12 rounded-full bg-cream flex items-center justify-center hover:bg-soft-blue hover:text-white transition-all text-ink/70"
               >
-                <span className="material-symbols-outlined text-xl">
-                  {link.icon}
-                </span>
+                <Icon icon={link.icon} className="text-xl" />
               </Link>
             ))}
           </div>
         </div>
-        <div className="mt-12 text-center text-ink/30 text-sm font-[family-name:var(--font-patrick-hand)]">
-          © 2024 Soanki AI. Crafted with ♥ for language learners everywhere.
+        <div className="mt-12 text-center text-ink/30 text-sm font-[family-name:var(--font-fredoka)]">
+          {t("copyright")}
         </div>
       </div>
     </footer>
