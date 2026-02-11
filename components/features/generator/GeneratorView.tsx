@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Stepper, type GeneratorStep } from "./Stepper";
 import { AddCardDialog } from "./AddCardDialog";
@@ -45,6 +45,57 @@ function createCard(overrides: Partial<CardType> & { word: string }): CardType {
 
 const EXPORT_SEPARATOR = "\t";
 
+const GENERATOR_OPTIONS_KEY = "soanki_generator_options";
+
+const VALID_LANGUAGES: GeneratorLanguage[] = ["de", "en", "ar"];
+const VALID_LEVELS: GeneratorLevel[] = ["A1", "A2", "B1", "B2", "C1"];
+
+function getStoredGeneratorOptions(): {
+  language: GeneratorLanguage;
+  explainingLanguage: GeneratorExplainingLanguage;
+  level: GeneratorLevel;
+} | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = localStorage.getItem(GENERATOR_OPTIONS_KEY);
+    if (!raw) return null;
+    const data = JSON.parse(raw) as Record<string, unknown>;
+    const lang = data?.language;
+    const explaining = data?.explainingLanguage;
+    const lvl = data?.level;
+    if (
+      typeof lang === "string" &&
+      VALID_LANGUAGES.includes(lang as GeneratorLanguage) &&
+      typeof explaining === "string" &&
+      VALID_LANGUAGES.includes(explaining as GeneratorExplainingLanguage) &&
+      typeof lvl === "string" &&
+      VALID_LEVELS.includes(lvl as GeneratorLevel)
+    ) {
+      return {
+        language: lang as GeneratorLanguage,
+        explainingLanguage: explaining as GeneratorExplainingLanguage,
+        level: lvl as GeneratorLevel,
+      };
+    }
+  } catch {
+    // ignore invalid or missing data
+  }
+  return null;
+}
+
+function setStoredGeneratorOptions(options: {
+  language: GeneratorLanguage;
+  explainingLanguage: GeneratorExplainingLanguage;
+  level: GeneratorLevel;
+}) {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(GENERATOR_OPTIONS_KEY, JSON.stringify(options));
+  } catch {
+    // ignore quota or other errors
+  }
+}
+
 function sanitizeCell(value: string): string {
   return String(value).replace(/\t/g, " ").replace(/\r?\n/g, " ");
 }
@@ -79,6 +130,21 @@ export function GeneratorView() {
   const [isGeneratingAudio, setIsGeneratingAudio] = useState(false);
   const [isPreparingDeck, setIsPreparingDeck] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Load generator options from localStorage on mount
+  useEffect(() => {
+    const stored = getStoredGeneratorOptions();
+    if (stored) {
+      setLanguage(stored.language);
+      setExplainingLanguage(stored.explainingLanguage);
+      setLevel(stored.level);
+    }
+  }, []);
+
+  // Persist generator options to localStorage when they change
+  useEffect(() => {
+    setStoredGeneratorOptions({ language, explainingLanguage, level });
+  }, [language, explainingLanguage, level]);
 
   const generateDeck = useApiMutation<
     GenerateDeckResponse,
